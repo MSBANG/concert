@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.concert.dto.ConcertDTO;
 import kr.hhplus.be.server.concert.dto.ConcertDateWithSeatDTO;
+import kr.hhplus.be.server.concert.dto.ConcertSeatDTO;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,5 +32,14 @@ public class ConcertController {
             @RequestParam("date_id") long dateId
     ) {
         return ConcertDateWithSeatDTO.getDefault();
+    }
+
+    @Operation(summary = "콘서트 좌석 예약 요청", description="seat_id 에 해당하는 좌석 예약을 요청합니다")
+    @PostMapping(value="/seats/{seat_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ConcertSeatDTO reserveSeat(
+            @RequestHeader("X-queue-token") String queue_token,
+            @PathVariable("seat_id") long seatId
+    ) {
+        return ConcertSeatDTO.getDefault();
     }
 }
