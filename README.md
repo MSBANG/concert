@@ -242,3 +242,9 @@ sequenceDiagram
 ```
 </details>
 </details>
+<details>
+<summary><b>ERD</b></summary>
+	
+![Image](https://github.com/user-attachments/assets/cf4c4d34-0edf-4c10-b967-4122ddd07fb3)
+
+</details>
