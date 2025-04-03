@@ -2,6 +2,7 @@ package kr.hhplus.be.server.payment;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.hhplus.be.server.payment.dto.PaySeatReservationRequestDTO;
 import kr.hhplus.be.server.payment.dto.PaymentDTO;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,14 @@ public class PaymentController {
     @PostMapping(value="", produces = MediaType.APPLICATION_JSON_VALUE)
     public PaymentDTO chargeUserBalance(
             @RequestBody PaymentDTO request
+    ) {
+        return PaymentDTO.getDefault();
+    }
+
+    @Operation(summary = "좌석 결제", description="충전된 잔액으로 좌석 예약건을 결제합니다.")
+    @PostMapping(value="/paySeat", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PaymentDTO paySeat(
+            @RequestBody PaySeatReservationRequestDTO request
     ) {
         return PaymentDTO.getDefault();
     }
