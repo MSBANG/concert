@@ -1,7 +1,4 @@
-package kr.hhplus.be.server.concert.dto;
-
-import java.time.DateTimeException;
-import java.util.Date;
+package kr.hhplus.be.server.interfaces.concert.dto;
 
 public record ConcertDateDTO(
         long date_id,

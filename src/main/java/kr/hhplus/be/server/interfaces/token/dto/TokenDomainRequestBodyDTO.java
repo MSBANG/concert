@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.token.dto;
+package kr.hhplus.be.server.interfaces.token.dto;
 
 public class TokenDomainRequestBodyDTO {
     public record TokenCreateRequestBodyDTO(

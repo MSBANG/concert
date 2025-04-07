@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.concert.dto;
+package kr.hhplus.be.server.interfaces.concert.dto;
 
 import java.util.Arrays;
 import java.util.List;

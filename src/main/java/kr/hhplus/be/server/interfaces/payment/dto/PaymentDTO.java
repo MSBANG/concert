@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.payment.dto;
+package kr.hhplus.be.server.interfaces.payment.dto;
 
 public record PaymentDTO(
         long user_id,
