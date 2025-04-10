@@ -1,7 +1,6 @@
-package kr.hhplus.be.server.domain.concert;
+package kr.hhplus.be.server.domain.concert.domain;
 
 
-import io.micrometer.common.lang.Nullable;
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 
 import java.time.LocalDate;
