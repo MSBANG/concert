@@ -3,8 +3,8 @@ package kr.hhplus.be.server.domain.payment;
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 
 public class Payment{
-    private final long userId;
-    private long balance;
+    public long userId;
+    public long balance;
 
     public Payment(long userId, long balance) {
         this.userId = userId;
