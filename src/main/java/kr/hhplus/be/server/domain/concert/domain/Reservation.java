@@ -9,6 +9,14 @@ public class Reservation{
     long concertId;
     long statusEnum;
 
+    public Reservation(long reservationId, long userId, long seatId, long concertId, long statusEnum) {
+        this.reservationId = reservationId;
+        this.userId = userId;
+        this.seatId = seatId;
+        this.concertId = concertId;
+        this.statusEnum = statusEnum;
+    }
+
     public void pay() {
         if (this.statusEnum == -1) {
             throw APIException.expiredReservation();
