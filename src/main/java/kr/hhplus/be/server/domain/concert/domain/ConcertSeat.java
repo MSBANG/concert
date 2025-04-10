@@ -2,16 +2,31 @@ package kr.hhplus.be.server.domain.concert.domain;
 
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 
-public record ConcertSeat(
-        long seatId,
-        long dateId,
-        boolean isAvail,
-        long price
-) {
-    public ConcertSeat{
-        // 콘서트 가격은 0 이하일 수 없음
-        if (price < 0) {
-            throw APIException.seatPriceInsufficient();
+public class ConcertSeat{
+    long seatId;
+    long dateId;
+    boolean isAvail;
+    long price;
+
+    public ConcertSeat(long seatId, long dateId, boolean isAvail, long price) {
+        this.seatId = seatId;
+        this.dateId = dateId;
+        this.isAvail = isAvail;
+        this.price = price;
+    }
+
+    public void reserve() {
+        if (!this.isAvail) {
+            throw APIException.seatAlreadyReserved();
         }
+        this.isAvail = false;
+    }
+
+    public long getSeatId() {
+        return seatId;
+    }
+
+    public boolean getIsAvail() {
+        return isAvail;
     }
 }
