@@ -1,10 +1,8 @@
 package kr.hhplus.be.server.infrastructure.concert;
 
 
-import kr.hhplus.be.server.domain.concert.domain.Concert;
-import kr.hhplus.be.server.domain.concert.domain.ConcertDateWithSeat;
+import kr.hhplus.be.server.domain.concert.domain.*;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
-import kr.hhplus.be.server.domain.concert.domain.ConcertWithDate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +28,20 @@ public class ConcertRepositoryJPAImpl implements ConcertRepository {
     @Override
     public boolean getSeatIsAvail(long seatId) {
         return false;
+    }
+
+    @Override
+    public void saveSeatReservation(ReserveSeat reserveSeat) {
+
+    }
+
+    @Override
+    public void updateSeatIsAvail(long seatId, boolean isAvail) {
+
+    }
+
+    @Override
+    public ConcertSeat getConcertSeatById(long seatId) {
+        return null;
     }
 }
