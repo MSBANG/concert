@@ -51,4 +51,8 @@ public record APIResponse(
     public static APIResponse seatPriceInsufficient() {
         return new APIResponse(false, ResponseCodeEnum.SEAT_PRICE_INSUFFICIENT.getStatusCode(), ResponseCodeEnum.SEAT_PRICE_INSUFFICIENT.getMessage(), null);
     }
+
+    public static APIResponse seatAlreadyReserved() {
+        return new APIResponse(false, ResponseCodeEnum.SEAT_ALREADY_RESERVED.getStatusCode(), ResponseCodeEnum.SEAT_ALREADY_RESERVED.getMessage(), null);
+    }
 }

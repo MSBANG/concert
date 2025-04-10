@@ -29,4 +29,8 @@ public class APIException extends RuntimeException {
     public static APIException seatPriceInsufficient() {
         return new APIException(APIResponse.seatPriceInsufficient());
     }
+    public static APIException seatAlreadyReserved() {
+        return new APIException(APIResponse.seatAlreadyReserved());
+    }
+
 }

@@ -15,7 +15,10 @@ public enum ResponseCodeEnum {
     SEAT_PRICE_INSUFFICIENT(400, "SEAT_PRICE_INSUFFICIENT"),
 
     //서버 에러
-    INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR");
+    INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR"),
+
+    //예약 실패
+    SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED");
 
     private final int statusCode;
     private final String message;
