@@ -29,4 +29,8 @@ public class ConcertSeat{
     public boolean getIsAvail() {
         return isAvail;
     }
+
+    public long getPrice() {
+        return price;
+    }
 }
