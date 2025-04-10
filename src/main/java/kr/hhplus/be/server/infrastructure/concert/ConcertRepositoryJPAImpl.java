@@ -44,4 +44,19 @@ public class ConcertRepositoryJPAImpl implements ConcertRepository {
     public ConcertSeat getConcertSeatById(long seatId) {
         return null;
     }
+
+    @Override
+    public List<Reservation> getAllReservations(long userId) {
+        return List.of();
+    }
+
+    @Override
+    public Reservation getReservationById(long reservationId) {
+        return null;
+    }
+
+    @Override
+    public void updateReservationStatus(long reservationId, long statusEnum) {
+
+    }
 }
