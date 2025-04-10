@@ -24,7 +24,7 @@ public class ConcertService {
     // 콘서트 전체 목록 조회
     public List<ConcertCommand> getAllConcert(){
         List<Concert> concertList = concertRepo.getAllConcert();
-        return concertMapper.toCommandList(concertList);
+        return concertMapper.concertListToCommandList(concertList);
     }
 
     // 콘서트 일정(dates) 조회
@@ -39,6 +39,23 @@ public class ConcertService {
         return concertMapper.toCommand(concertWithDate);
     }
 
+    // 예약 조회
+    public List<ReservationCommand> getAllReservations(long userId){
+        List<Reservation> reservationList = concertRepo.getAllReservations(userId);
+        return concertMapper.reservationListToCommandList(reservationList);
+    }
+
+    public ReservationCommand getReservationById(long reservationId){
+        Reservation reservation = concertRepo.getReservationById(reservationId);
+        return concertMapper.toCommand(reservation);
+    }
+
+    public ConcertSeatCommand getConcertSeatById(long seatId) {
+        ConcertSeat concertSeat = concertRepo.getConcertSeatById(seatId);
+        return concertMapper.toCommand(concertSeat);
+    }
+    
+    // 좌석 예약
     @Transactional
     public ConcertSeatCommand reserveSeat(ReserveSeatCommand reserveSeatCommand) {
         // 좌석 예약 가능여부 확인

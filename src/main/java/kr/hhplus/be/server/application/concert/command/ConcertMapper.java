@@ -13,8 +13,8 @@ public interface ConcertMapper {
     // Concert
     ConcertCommand toCommand(Concert concert);
     Concert toDomain(ConcertCommand command);
-    List<ConcertCommand> toCommandList(List<Concert> concertList);
-    List<Concert> toDomainList(List<ConcertCommand> commandList);
+    List<ConcertCommand> concertListToCommandList(List<Concert> concertList);
+    List<Concert> concertCommandListToDomainList(List<ConcertCommand> commandList);
 
     // ConcertDate
     ConcertDateCommand toCommand(ConcertDate concertDate);
@@ -35,4 +35,10 @@ public interface ConcertMapper {
     // ReserveSeat
     ReserveSeatCommand toCommand(ReserveSeat reserveSeat);
     ReserveSeat toDomain(ReserveSeatCommand command);
+
+    // Reservation
+    ReservationCommand toCommand(Reservation reservation);
+    Reservation toDomain(ReservationCommand command);
+    List<ReservationCommand> reservationListToCommandList(List<Reservation> reservationList);
+    List<Reservation> reservationCommandListtoDomainList(List<ReservationCommand> commandList);
 }
