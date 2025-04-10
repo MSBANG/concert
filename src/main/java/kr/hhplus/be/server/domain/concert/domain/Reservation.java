@@ -9,7 +9,7 @@ public class Reservation{
     long concertId;
     long statusEnum;
 
-    public void reserve() {
+    public void pay() {
         if (this.statusEnum == -1) {
             throw APIException.expiredReservation();
         }
