@@ -34,5 +34,6 @@ public class APIException extends RuntimeException {
     }
 
     public static APIException insufficientBalance() { return new APIException(APIResponse.insufficientBalance()); }
+    public static APIException expiredReservation() { return new APIException(APIResponse.expiredReservation()); }
 
 }

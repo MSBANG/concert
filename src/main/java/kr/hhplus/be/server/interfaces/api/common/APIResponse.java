@@ -59,4 +59,8 @@ public record APIResponse(
     public static APIResponse insufficientBalance() {
         return new APIResponse(false, ResponseCodeEnum.INSUFFICIENT_BALANCE.getStatusCode(), ResponseCodeEnum.INSUFFICIENT_BALANCE.getMessage(), null);
     }
+
+    public static APIResponse expiredReservation() {
+        return new APIResponse(false, ResponseCodeEnum.EXPIRED_RESERVATION.getStatusCode(), ResponseCodeEnum.EXPIRED_RESERVATION.getMessage(), null);
+    }
 }
