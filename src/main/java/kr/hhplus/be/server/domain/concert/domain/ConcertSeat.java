@@ -3,10 +3,10 @@ package kr.hhplus.be.server.domain.concert.domain;
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 
 public class ConcertSeat{
-    long seatId;
-    long dateId;
-    boolean isAvail;
-    long price;
+    public long seatId;
+    public long dateId;
+    public boolean isAvail;
+    public long price;
 
     public ConcertSeat(long seatId, long dateId, boolean isAvail, long price) {
         this.seatId = seatId;
