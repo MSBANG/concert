@@ -20,7 +20,10 @@ public class Reservation{
     public void pay() {
         if (this.statusEnum == -1) {
             throw APIException.expiredReservation();
+        }else if (this.statusEnum == 1){
+            throw APIException.alreadyPaidReservation();
         }
+
         this.statusEnum = 1;
     }
 

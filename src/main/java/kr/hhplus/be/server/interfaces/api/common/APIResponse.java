@@ -63,4 +63,8 @@ public record APIResponse(
     public static APIResponse expiredReservation() {
         return new APIResponse(false, ResponseCodeEnum.EXPIRED_RESERVATION.getStatusCode(), ResponseCodeEnum.EXPIRED_RESERVATION.getMessage(), null);
     }
+
+    public static APIResponse alreadyPaidReservation() {
+        return new APIResponse(false, ResponseCodeEnum.ALREADY_PAID_RESERVATION.getStatusCode(), ResponseCodeEnum.ALREADY_PAID_RESERVATION.getMessage(), null);
+    }
 }
