@@ -14,10 +14,13 @@ public enum ResponseCodeEnum {
     START_DATE_AFTER_END_DATE(400, "START_DATE_AFTER_END_DATE"),
     SEAT_PRICE_INSUFFICIENT(400, "SEAT_PRICE_INSUFFICIENT"),
 
-    //서버 에러
+    //서버 Exception
     INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR"),
 
-    //예약 실패
+    //결제 Exception
+    INSUFFICIENT_BALANCE(400, "INSUFFICIENT_BALANCE"),
+
+    //예약 Exception
     SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED");
 
     private final int statusCode;

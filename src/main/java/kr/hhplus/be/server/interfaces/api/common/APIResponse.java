@@ -55,4 +55,8 @@ public record APIResponse(
     public static APIResponse seatAlreadyReserved() {
         return new APIResponse(false, ResponseCodeEnum.SEAT_ALREADY_RESERVED.getStatusCode(), ResponseCodeEnum.SEAT_ALREADY_RESERVED.getMessage(), null);
     }
+
+    public static APIResponse insufficientBalance() {
+        return new APIResponse(false, ResponseCodeEnum.INSUFFICIENT_BALANCE.getStatusCode(), ResponseCodeEnum.INSUFFICIENT_BALANCE.getMessage(), null);
+    }
 }
