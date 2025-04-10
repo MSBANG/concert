@@ -31,4 +31,8 @@ public interface ConcertMapper {
     // ConcertWithDate
     ConcertWithDateCommand toCommand(ConcertWithDate concertWithDate);
     ConcertWithDate toDomain(ConcertWithDateCommand command);
+
+    // ReserveSeat
+    ReserveSeatCommand toCommand(ReserveSeat reserveSeat);
+    ReserveSeat toDomain(ReserveSeatCommand command);
 }
