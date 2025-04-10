@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.api;
+package kr.hhplus.be.server;
 
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 import kr.hhplus.be.server.interfaces.api.common.APIResponse;

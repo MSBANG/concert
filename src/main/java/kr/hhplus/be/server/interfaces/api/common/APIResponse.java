@@ -43,4 +43,12 @@ public record APIResponse(
     public static APIResponse pageNotFound() {
         return new APIResponse(false, ResponseCodeEnum.PAGE_NOT_FOUND.getStatusCode(), ResponseCodeEnum.PAGE_NOT_FOUND.getMessage(), null);
     }
+
+    public static APIResponse startDateAfterEndDate() {
+        return new APIResponse(false, ResponseCodeEnum.START_DATE_AFTER_END_DATE.getStatusCode(), ResponseCodeEnum.START_DATE_AFTER_END_DATE.getMessage(), null);
+    }
+
+    public static APIResponse seatPriceInsufficient() {
+        return new APIResponse(false, ResponseCodeEnum.SEAT_PRICE_INSUFFICIENT.getStatusCode(), ResponseCodeEnum.SEAT_PRICE_INSUFFICIENT.getMessage(), null);
+    }
 }

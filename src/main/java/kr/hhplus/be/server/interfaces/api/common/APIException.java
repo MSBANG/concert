@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.common;
 
+import io.micrometer.common.lang.Nullable;
+
 public class APIException extends RuntimeException {
     private final APIResponse apiResponse;
 
@@ -10,5 +12,21 @@ public class APIException extends RuntimeException {
 
     public APIResponse getApiResponse() {
         return apiResponse;
+    }
+
+    public static APIException pageNotFound() {
+        return new APIException(APIResponse.pageNotFound());
+    }
+
+    public static APIException startDateAfterEndDate() {
+        return new APIException(APIResponse.startDateAfterEndDate());
+    }
+
+    public static APIException failure(@Nullable ResponseItem<?> data){
+        return new APIException(APIResponse.failure(data));
+    }
+
+    public static APIException seatPriceInsufficient() {
+        return new APIException(APIResponse.seatPriceInsufficient());
     }
 }
