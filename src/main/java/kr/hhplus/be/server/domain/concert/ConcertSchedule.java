@@ -28,15 +28,13 @@ public class ConcertSchedule extends BaseEntity {
     private List<ConcertSeat> seats;
 
     @Builder
-    private ConcertSchedule(long scheduleId, Concert concert, LocalDate startDate) {
-        this.scheduleId = scheduleId;
+    private ConcertSchedule(Concert concert, LocalDate startDate) {
         this.concert = concert;
         this.startDate = startDate;
     }
 
-    public static ConcertSchedule create(long scheduleId, Concert concert, LocalDate startDate){
+    public static ConcertSchedule create(Concert concert, LocalDate startDate){
         return ConcertSchedule.builder()
-                .scheduleId(scheduleId)
                 .concert(concert)
                 .startDate(startDate)
                 .build();

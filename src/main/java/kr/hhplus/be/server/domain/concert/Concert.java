@@ -20,15 +20,13 @@ public class Concert extends BaseEntity {
     List<ConcertSchedule> schedules;
 
     @Builder
-    private Concert(long concertId, String name ) {
-        this.concertId = concertId;
+    private Concert(String name ) {
         this.name = name;
     }
 
-    public static Concert create(long concertId, String name){
+    public static Concert create(String name){
         validateName(name);
         return Concert.builder()
-                .concertId(concertId)
                 .name(name)
                 .build();
     }

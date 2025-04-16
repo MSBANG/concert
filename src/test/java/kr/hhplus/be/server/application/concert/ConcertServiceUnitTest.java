@@ -53,13 +53,13 @@ class ConcertServiceUnitTest {
 		// given
 		long concertId = 1L;
 		String concertName = "TestConcertName";
-		Concert concert = Concert.create(concertId, concertName); // 테스트용 도메인 생성
+		Concert concert = Concert.create(concertName); // 테스트용 도메인 생성
 		ReflectionTestUtils.setField(concert, "concertId", concertId);
 
 		ConcertCommand concertCommand = ConcertCommand.of(concertId);
 
-		ConcertSchedule schedule1 = ConcertSchedule.create(101L, concert, LocalDate.of(2025, 5, 1));
-		ConcertSchedule schedule2 = ConcertSchedule.create(102L, concert, LocalDate.of(2025, 6, 1));
+		ConcertSchedule schedule1 = ConcertSchedule.create(concert, LocalDate.of(2025, 5, 1));
+		ConcertSchedule schedule2 = ConcertSchedule.create(concert, LocalDate.of(2025, 6, 1));
 
 		List<ConcertSchedule> schedules = List.of(schedule1, schedule2);
 
@@ -110,8 +110,8 @@ class ConcertServiceUnitTest {
 
 		ConcertSchedule concertSchedule = new ConcertSchedule(); // Assuming Schedule exists with valid data
 		ReflectionTestUtils.setField(concertSchedule, "scheduleId", scheduleId);
-		ConcertSeat seat1 = ConcertSeat.create(101L, concertSchedule, 100L, true, 1);
-		ConcertSeat seat2 = ConcertSeat.create(102L, concertSchedule, 150L, false, 2);
+		ConcertSeat seat1 = ConcertSeat.create(concertSchedule, 100L, true, 1);
+		ConcertSeat seat2 = ConcertSeat.create(concertSchedule, 150L, false, 2);
 
 		List<ConcertSeat> seats = List.of(seat1, seat2);
 
