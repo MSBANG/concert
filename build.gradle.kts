@@ -36,7 +36,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.mapstruct:mapstruct:1.6.3")
-	implementation("org.projectlombok:lombok:1.18.38")
+	compileOnly("org.projectlombok:lombok:1.18.38")
+	annotationProcessor("org.projectlombok:lombok:1.18.38")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
 
