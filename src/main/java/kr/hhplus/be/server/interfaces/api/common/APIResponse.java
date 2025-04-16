@@ -67,4 +67,8 @@ public record APIResponse(
     public static APIResponse alreadyPaidReservation() {
         return new APIResponse(false, ResponseCodeEnum.ALREADY_PAID_RESERVATION.getStatusCode(), ResponseCodeEnum.ALREADY_PAID_RESERVATION.getMessage(), null);
     }
+
+    public static APIResponse concertNotFound() {
+        return new APIResponse(false, ResponseCodeEnum.CONCERT_NOT_FOUND.getStatusCode(), ResponseCodeEnum.CONCERT_NOT_FOUND.getMessage(), null);
+    }
 }
