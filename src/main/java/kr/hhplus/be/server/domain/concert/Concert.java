@@ -16,6 +16,9 @@ public class Concert extends BaseEntity {
     private long concertId;
     private String name;
 
+    @OneToMany(mappedBy = "concert")
+    List<ConcertSchedule> schedules;
+
     @Builder
     private Concert(long concertId, String name ) {
         this.concertId = concertId;
@@ -23,7 +26,7 @@ public class Concert extends BaseEntity {
     }
 
     public static Concert create(long concertId, String name){
-        Concert.validateName(name);
+        validateName(name);
         return Concert.builder()
                 .concertId(concertId)
                 .name(name)
@@ -32,7 +35,7 @@ public class Concert extends BaseEntity {
 
     private static void validateName(String name) {
         if(name.isEmpty()) {
-            throw new RuntimeException("fuck");
+            throw new RuntimeException("invalid concert name");
         }
     }
 }
