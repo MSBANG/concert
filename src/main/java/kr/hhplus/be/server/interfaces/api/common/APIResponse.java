@@ -71,4 +71,8 @@ public record APIResponse(
     public static APIResponse concertNotFound() {
         return new APIResponse(false, ResponseCodeEnum.CONCERT_NOT_FOUND.getStatusCode(), ResponseCodeEnum.CONCERT_NOT_FOUND.getMessage(), null);
     }
+
+    public static APIResponse scheduleNotFound() {
+        return new APIResponse(false, ResponseCodeEnum.SCHEDULE_NOT_FOUND.getStatusCode(), ResponseCodeEnum.SCHEDULE_NOT_FOUND.getMessage(), null);
+    }
 }

@@ -3,6 +3,7 @@ package kr.hhplus.be.server.infrastructure.concert;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +18,22 @@ public class ConcertJPARepositoryImpl implements ConcertRepository {
     }
 
     @Override
+    public Optional<ConcertSchedule> getScheduleById(long scheduleId) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<Concert> getAllConcerts() {
         return List.of();
     }
 
     @Override
     public List<ConcertSchedule> getAllConcertSchedules(long concertId) {
+        return List.of();
+    }
+
+    @Override
+    public List<ConcertSeat> getAllSeats(long scheduleId) {
         return List.of();
     }
 }

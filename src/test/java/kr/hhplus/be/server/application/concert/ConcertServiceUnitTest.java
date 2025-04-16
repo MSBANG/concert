@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application.concert;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -82,5 +82,65 @@ class ConcertServiceUnitTest {
 
 		Mockito.verify(concertRepo).getConcertById(concertId);
 		Mockito.verify(concertRepo).getAllConcertSchedules(concertId);
+	}
+
+	@Test
+	@DisplayName("scheduleId에 해당하는 Schedule이 없을 때 예외 발생")
+	void testScheduleNotFoundException() {
+		// given
+		long invalidScheduleId = 999L;
+		ScheduleCommand command = ScheduleCommand.fromScheduleId(invalidScheduleId);
+
+		Mockito.when(concertRepo.getScheduleById(invalidScheduleId))
+				.thenReturn(Optional.empty());
+
+		// when & then
+		Assertions.assertThrows(APIException.class, () -> {
+			concertService.getConcertSeats(command);
+		});
+		Mockito.verify(concertRepo).getScheduleById(invalidScheduleId);
+	}
+
+	@Test
+	@DisplayName("scheduleId에 해당하는 ConcertSeats가 정상적으로 변환되어 반환되는지 확인")
+	void testGetConcertSeatsSuccess() {
+		// given
+		long scheduleId = 1L;
+		ScheduleCommand command = ScheduleCommand.fromScheduleId(scheduleId);
+
+		ConcertSchedule concertSchedule = new ConcertSchedule(); // Assuming Schedule exists with valid data
+		ReflectionTestUtils.setField(concertSchedule, "scheduleId", scheduleId);
+		ConcertSeat seat1 = ConcertSeat.create(101L, concertSchedule, 100L, true, 1);
+		ConcertSeat seat2 = ConcertSeat.create(102L, concertSchedule, 150L, false, 2);
+
+		List<ConcertSeat> seats = List.of(seat1, seat2);
+
+		// `concertRepo.getScheduleById`가 정상적으로 Schedule을 반환하도록 설정
+		Mockito.when(concertRepo.getScheduleById(scheduleId))
+				.thenReturn(Optional.of(concertSchedule));
+
+		// `concertRepo.getAllSeats`가 ConcertSeat 리스트를 반환하도록 설정
+		Mockito.when(concertRepo.getAllSeats(scheduleId))
+				.thenReturn(seats);
+
+		// when
+		List<SeatResult> result = concertService.getConcertSeats(command);
+		System.out.println(result.toString());
+
+		// then
+		Assertions.assertEquals(2, result.size());
+
+		Assertions.assertEquals(101L, result.get(0).getSeatId());
+		Assertions.assertEquals(100L, result.get(0).getPrice());
+		Assertions.assertTrue(result.get(0).isAvail());
+		Assertions.assertEquals(1, result.get(0).getSeatNum());
+
+		Assertions.assertEquals(102L, result.get(1).getSeatId());
+		Assertions.assertEquals(150L, result.get(1).getPrice());
+		Assertions.assertFalse(result.get(1).isAvail());
+		Assertions.assertEquals(2, result.get(1).getSeatNum());
+
+		Mockito.verify(concertRepo).getScheduleById(scheduleId);
+		Mockito.verify(concertRepo).getAllSeats(scheduleId);
 	}
 }

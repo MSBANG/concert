@@ -8,14 +8,29 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScheduleCommand {
-    private long scheduleId;
-    private long concertId;
-    private LocalDate startDate;
+    private final long scheduleId;
+    private final long concertId;
+    private final LocalDate startDate;
 
     @Builder
-    public static ScheduleCommand of(long scheduleId, long concertId, LocalDate startDate) {
-        return new ScheduleCommand(scheduleId, concertId, startDate);
+    private ScheduleCommand(long scheduleId, long concertId, LocalDate startDate) {
+        this.scheduleId = scheduleId;
+        this.concertId = concertId;
+        this.startDate = startDate;
+    }
+
+    public static ScheduleCommand fromScheduleId(long scheduleId){
+        return ScheduleCommand.builder()
+                .scheduleId(scheduleId)
+                .build();
+    }
+
+    public static ScheduleCommand create(long scheduleId, long concertId, LocalDate startDate) {
+        return ScheduleCommand.builder()
+                .scheduleId(scheduleId)
+                .concertId(concertId)
+                .startDate(startDate)
+                .build();
     }
 }

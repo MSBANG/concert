@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.interfaces.api.common;
 
+import lombok.Getter;
+
+@Getter
 public enum ResponseCodeEnum {
     // 성공
     OK(200, "OPERATION_SUCCESS"),
@@ -9,7 +12,7 @@ public enum ResponseCodeEnum {
     PAGE_NOT_FOUND(404, "PAGE_NOT_FOUND"),
     CONCERT_NOT_FOUND(404, "CONCERT_NOT_FOUND"),
     SEAT_NOT_FOUND(404, "SEAT_NOT_FOUND"),
-    DATE_NOT_FOUND(404, "DATE_NOT_FOUND"),
+    SCHEDULE_NOT_FOUND(404, "SCHEDULE_NOT_FOUND"),
 
     //생성 실패
     START_DATE_AFTER_END_DATE(400, "START_DATE_AFTER_END_DATE"),
@@ -32,13 +35,5 @@ public enum ResponseCodeEnum {
     ResponseCodeEnum(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

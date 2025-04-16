@@ -35,6 +35,8 @@ public class APIException extends RuntimeException {
     public static APIException expiredReservation() { return new APIException(APIResponse.expiredReservation()); }
     public static APIException alreadyPaidReservation() { return new APIException(APIResponse.alreadyPaidReservation()); }
     public static APIException concertNotFound() { return new APIException(APIResponse.concertNotFound()); }
+    public static APIException scheduleNotFound() { return new APIException(APIResponse.scheduleNotFound()); }
+
 
 
 }

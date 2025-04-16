@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application.concert;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.interfaces.api.common.APIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,14 @@ public class ConcertService {
     }
 
     // 콘서트 좌석
-    // 콘서트 예약
+    public List<SeatResult> getConcertSeats(ScheduleCommand command) {
+        concertRepo.getScheduleById(command.getScheduleId())
+                .orElseThrow(APIException::scheduleNotFound);
+
+        List<ConcertSeat> seats = concertRepo.getAllSeats(command.getScheduleId());
+        return seats.stream()
+                .map(SeatResult::from)
+                .toList();
+    }
 }
 

@@ -8,12 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class ConcertSchedule extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long scheduleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,6 +23,9 @@ public class ConcertSchedule extends BaseEntity {
     private Concert concert;
 
     private LocalDate startDate;
+
+    @OneToMany(mappedBy = "concertSchedule")
+    private List<ConcertSeat> seats;
 
     @Builder
     private ConcertSchedule(long scheduleId, Concert concert, LocalDate startDate) {
