@@ -69,7 +69,7 @@ class ConcertServiceUnitTest {
 				.thenReturn(schedules);
 
 		// when
-		List<ConcertResult.ScheduleInfo> result = concertService.getConcertSchedules(concertCommand);
+		List<ScheduleResult> result = concertService.getConcertSchedules(concertCommand);
 
 		// then
 		Assertions.assertEquals(2, result.size());
