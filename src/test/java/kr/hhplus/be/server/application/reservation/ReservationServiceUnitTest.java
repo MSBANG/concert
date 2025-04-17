@@ -83,7 +83,6 @@ class ReservationServiceTest {
         reservationService.reserveSeat(command);
 
         // then
-        Mockito.verify(concertRepo).updateSeatIsAvail(seatId, false);
         Mockito.verify(reservationRepo).save(Mockito.any(Reservation.class));
     }
 }

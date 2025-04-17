@@ -32,7 +32,6 @@ public class ReservationService {
                 concert,
                 ReservationStatusEnum.RESERVED
         );
-        concertRepo.updateSeatIsAvail(seat.getSeatId(), seat.isAvail());
         reservationRepo.save(reservation);
     }
 

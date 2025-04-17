@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "concert_seat")
 @NoArgsConstructor
 public class ConcertSeat extends BaseEntity {
     @Id
@@ -49,13 +50,24 @@ public class ConcertSeat extends BaseEntity {
     }
 
     public void reserve() {
-        checkReserveStatus();
+        checkSeatAlreadyReserved();
         this.isAvail = false;
     }
 
-    private void checkReserveStatus() {
+    public void cancel() {
+        checkSeatAlreadyCanceled();
+        this.isAvail = true;
+    }
+
+    private void checkSeatAlreadyReserved() {
         if (!(this.isAvail)) {
             throw APIException.seatAlreadyReserved();
+        }
+    }
+
+    private void checkSeatAlreadyCanceled() {
+        if ((this.isAvail)) {
+            throw new RuntimeException("some Exception");
         }
     }
 }
