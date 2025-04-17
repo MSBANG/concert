@@ -79,8 +79,4 @@ public record APIResponse(
     public static APIResponse seatNotFound() {
         return new APIResponse(false, ResponseCodeEnum.SEAT_NOT_FOUND.getStatusCode(), ResponseCodeEnum.SEAT_NOT_FOUND.getMessage(), null);
     }
-
-    public static APIResponse userAlreadyReservedSameSeat() {
-        return new APIResponse(false, ResponseCodeEnum.USER_ALREADY_RESERVED_SAME_SEAT.getStatusCode(), ResponseCodeEnum.USER_ALREADY_RESERVED_SAME_SEAT.getMessage(), null);
-    }
 }

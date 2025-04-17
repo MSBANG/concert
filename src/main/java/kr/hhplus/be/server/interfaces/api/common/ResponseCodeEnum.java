@@ -27,8 +27,7 @@ public enum ResponseCodeEnum {
     ALREADY_PAID_RESERVATION(400, "ALREADY_PAID_RESERVATION"),
 
     //예약 Exception
-    SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED"),
-    USER_ALREADY_RESERVED_SAME_SEAT(400, "USER_ALREADY_RESERVED_SAME_SEAT");
+    SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED");
 
     private final int statusCode;
     private final String message;
