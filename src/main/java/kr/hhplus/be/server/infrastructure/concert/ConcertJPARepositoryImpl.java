@@ -23,6 +23,16 @@ public class ConcertJPARepositoryImpl implements ConcertRepository {
     }
 
     @Override
+    public Optional<ConcertSeat> getSeatById(long seatId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void updateSeatIsAvail(long seatId, boolean isAvail) {
+
+    }
+
+    @Override
     public List<Concert> getAllConcerts() {
         return List.of();
     }
