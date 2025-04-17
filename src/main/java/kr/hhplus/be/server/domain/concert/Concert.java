@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.concert;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseEntity;
+import kr.hhplus.be.server.domain.reservation.Reservation;
 import lombok.*;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class Concert extends BaseEntity {
 
     @OneToMany(mappedBy = "concert")
     List<ConcertSchedule> schedules;
+
+    @OneToMany(mappedBy = "concert")
+    List<Reservation> reservations;
 
     @Builder
     private Concert(String name ) {

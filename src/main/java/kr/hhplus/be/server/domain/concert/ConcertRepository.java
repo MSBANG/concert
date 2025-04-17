@@ -6,8 +6,9 @@ import java.util.Optional;
 public interface ConcertRepository {
     Optional<Concert> getConcertById(long concertId);
     Optional<ConcertSchedule> getScheduleById(long scheduleId);
+    Optional<ConcertSeat> getSeatById(long seatId);
+    void updateSeatIsAvail(long seatId, boolean isAvail);
     List<Concert> getAllConcerts();
     List<ConcertSchedule> getAllConcertSchedules(long concertId);
     List<ConcertSeat> getAllSeats(long scheduleId);
 }
-

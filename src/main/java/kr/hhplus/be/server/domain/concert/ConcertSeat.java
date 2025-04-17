@@ -30,15 +30,17 @@ public class ConcertSeat extends BaseEntity {
     List<Reservation> reservations;
 
     @Builder
-    private ConcertSeat(ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+    private ConcertSeat(long seatId, ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+        this.seatId = seatId;
         this.concertSchedule = concertSchedule;
         this.price = price;
         this.isAvail = isAvail;
         this.seatNum = seatNum;
     }
 
-    public static ConcertSeat create(ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+    public static ConcertSeat create(long seatId, ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
         return ConcertSeat.builder()
+                .seatId(seatId)
                 .concertSchedule(concertSchedule)
                 .price(price)
                 .isAvail(isAvail)
