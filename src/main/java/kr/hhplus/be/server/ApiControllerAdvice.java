@@ -1,6 +1,6 @@
 package kr.hhplus.be.server;
 
-import kr.hhplus.be.server.interfaces.api.common.APIException;
+import kr.hhplus.be.server.support.APIException;
 import kr.hhplus.be.server.interfaces.api.common.APIResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

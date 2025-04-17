@@ -7,7 +7,7 @@ import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.reservation.ReservationStatusEnum;
-import kr.hhplus.be.server.interfaces.api.common.APIException;
+import kr.hhplus.be.server.support.APIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.concert;
 
-import kr.hhplus.be.server.interfaces.api.common.APIException;
+import kr.hhplus.be.server.support.APIException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

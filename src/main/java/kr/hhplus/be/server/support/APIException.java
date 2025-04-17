@@ -1,6 +1,8 @@
-package kr.hhplus.be.server.interfaces.api.common;
+package kr.hhplus.be.server.support;
 
 import io.micrometer.common.lang.Nullable;
+import kr.hhplus.be.server.interfaces.api.common.APIResponse;
+import kr.hhplus.be.server.interfaces.api.common.ResponseItem;
 import lombok.Getter;
 
 @Getter

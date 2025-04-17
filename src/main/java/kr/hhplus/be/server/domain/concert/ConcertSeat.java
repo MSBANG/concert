@@ -3,7 +3,7 @@ package kr.hhplus.be.server.domain.concert;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseEntity;
 import kr.hhplus.be.server.domain.reservation.Reservation;
-import kr.hhplus.be.server.interfaces.api.common.APIException;
+import kr.hhplus.be.server.support.APIException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
