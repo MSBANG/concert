@@ -2,9 +2,13 @@ package kr.hhplus.be.server.domain.concert;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseEntity;
+import kr.hhplus.be.server.domain.reservation.Reservation;
+import kr.hhplus.be.server.interfaces.api.common.APIException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +26,9 @@ public class ConcertSeat extends BaseEntity {
     private boolean isAvail;
     private int seatNum;
 
+    @OneToMany(mappedBy = "seat")
+    List<Reservation> reservations;
+
     @Builder
     private ConcertSeat(ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
         this.concertSchedule = concertSchedule;
@@ -37,5 +44,16 @@ public class ConcertSeat extends BaseEntity {
                 .isAvail(isAvail)
                 .seatNum(seatNum)
                 .build();
+    }
+
+    public void reserve() {
+        checkReserveStatus();
+        this.isAvail = false;
+    }
+
+    private void checkReserveStatus() {
+        if (!(this.isAvail)) {
+            throw APIException.seatAlreadyReserved();
+        }
     }
 }
