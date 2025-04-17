@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseEntity;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.support.APIException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,11 +20,11 @@ public class Reservation extends BaseEntity {
     private long userId;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seatId")
     private ConcertSeat seat;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "concertId")
     private Concert concert;
 
@@ -32,7 +33,8 @@ public class Reservation extends BaseEntity {
 
 
     @Builder
-    public Reservation(long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum) {
+    private Reservation(long reservationId, long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum) {
+        this.reservationId = reservationId;
         this.userId = userId;
         this.seat = seat;
         this.concert = concert;
@@ -46,6 +48,25 @@ public class Reservation extends BaseEntity {
                 .concert(concert)
                 .statusEnum(statusEnum)
                 .build();
+    }
+
+    public static Reservation of(long reservationId, long userId, ConcertSeat seat, ReservationStatusEnum statusEnum) {
+        return Reservation.builder()
+                .reservationId(reservationId)
+                .userId(userId)
+                .seat(seat)
+                .statusEnum(statusEnum)
+                .build();
+    }
+
+    public void validateStatusEnum() {
+        if (this.statusEnum != ReservationStatusEnum.RESERVED){
+            if (this.statusEnum == ReservationStatusEnum.PAID) {
+                throw APIException.alreadyPaidReservation();
+            } else if(this.statusEnum == ReservationStatusEnum.EXPIRED) {
+                throw APIException.expiredReservation();
+            }
+        }
     }
 }
 
