@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.payment;
 
 public interface PaymentRepository {
-    Payment getBalance(long userId);
-    void updateBalance(Payment payment);
+    void updateBalance(long userId, long balance);
+    Payment getPaymentByUserId(long userId);
 }
