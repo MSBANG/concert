@@ -38,6 +38,13 @@ public class Payment extends BaseEntity {
                 .build();
     }
 
+    public static Payment of(long userId, long balance) {
+        return Payment.builder()
+                .userId(userId)
+                .balance(balance)
+                .build();
+    }
+
     public void use(long amount) {
         validateBalance(this.balance - amount);
         this.balance -= amount;

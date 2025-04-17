@@ -12,7 +12,8 @@ public class PaymentJPARepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public Payment getPayment(long userId) {
+    public Payment getPaymentByUserId(long userId) {
         return null;
     }
+
 }
