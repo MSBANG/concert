@@ -34,6 +34,7 @@ public class APIException extends RuntimeException {
     }
 
     public static APIException insufficientBalance() { return new APIException(APIResponse.insufficientBalance()); }
+    public static APIException insufficientAmount() { return new APIException(APIResponse.insufficientAmount()); }
     public static APIException expiredReservation() { return new APIException(APIResponse.expiredReservation()); }
     public static APIException alreadyPaidReservation() { return new APIException(APIResponse.alreadyPaidReservation()); }
     public static APIException concertNotFound() { return new APIException(APIResponse.concertNotFound()); }

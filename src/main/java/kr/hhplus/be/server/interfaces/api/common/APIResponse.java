@@ -60,6 +60,10 @@ public record APIResponse(
         return new APIResponse(false, ResponseCodeEnum.INSUFFICIENT_BALANCE.getStatusCode(), ResponseCodeEnum.INSUFFICIENT_BALANCE.getMessage(), null);
     }
 
+    public static APIResponse insufficientAmount() {
+        return new APIResponse(false, ResponseCodeEnum.INSUFFICIENT_AMOUNT.getStatusCode(), ResponseCodeEnum.INSUFFICIENT_AMOUNT.getMessage(), null);
+    }
+
     public static APIResponse expiredReservation() {
         return new APIResponse(false, ResponseCodeEnum.EXPIRED_RESERVATION.getStatusCode(), ResponseCodeEnum.EXPIRED_RESERVATION.getMessage(), null);
     }
