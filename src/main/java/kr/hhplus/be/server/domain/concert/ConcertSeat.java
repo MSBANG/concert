@@ -39,9 +39,8 @@ public class ConcertSeat extends BaseEntity {
         this.seatNum = seatNum;
     }
 
-    public static ConcertSeat create(long seatId, ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+    public static ConcertSeat create(ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
         return ConcertSeat.builder()
-                .seatId(seatId)
                 .concertSchedule(concertSchedule)
                 .price(price)
                 .isAvail(isAvail)
