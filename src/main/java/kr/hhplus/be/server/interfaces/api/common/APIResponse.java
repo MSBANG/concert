@@ -75,4 +75,12 @@ public record APIResponse(
     public static APIResponse scheduleNotFound() {
         return new APIResponse(false, ResponseCodeEnum.SCHEDULE_NOT_FOUND.getStatusCode(), ResponseCodeEnum.SCHEDULE_NOT_FOUND.getMessage(), null);
     }
+
+    public static APIResponse seatNotFound() {
+        return new APIResponse(false, ResponseCodeEnum.SEAT_NOT_FOUND.getStatusCode(), ResponseCodeEnum.SEAT_NOT_FOUND.getMessage(), null);
+    }
+
+    public static APIResponse userAlreadyReservedSameSeat() {
+        return new APIResponse(false, ResponseCodeEnum.USER_ALREADY_RESERVED_SAME_SEAT.getStatusCode(), ResponseCodeEnum.USER_ALREADY_RESERVED_SAME_SEAT.getMessage(), null);
+    }
 }
