@@ -7,13 +7,11 @@ import java.time.LocalDate;
 
 public record ScheduleResponse(
         long scheduleId,
-        Concert concert,
         LocalDate startDate
 ) {
     public static ScheduleResponse from (ScheduleResult scheduleResult) {
         return new ScheduleResponse(
                 scheduleResult.getScheduleId(),
-                scheduleResult.getConcert(),
                 scheduleResult.getStartDate()
             );
     }
