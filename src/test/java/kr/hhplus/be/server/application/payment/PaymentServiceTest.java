@@ -1,110 +1,111 @@
 package kr.hhplus.be.server.application.payment;
 
-import kr.hhplus.be.server.application.concert.ConcertService;
-import kr.hhplus.be.server.domain.concert.ConcertRepository;
-import kr.hhplus.be.server.domain.concert.domain.ConcertSeat;
-import kr.hhplus.be.server.domain.concert.domain.Reservation;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
-import kr.hhplus.be.server.interfaces.api.common.APIException;
+import kr.hhplus.be.server.domain.reservation.Reservation;
+import kr.hhplus.be.server.domain.reservation.ReservationRepository;
+import kr.hhplus.be.server.interfaces.api.common.ResponseCodeEnum;
+import kr.hhplus.be.server.support.APIException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
 
-    @Mock
-    private ConcertRepository concertRepo;
-
-    @Mock
     private PaymentRepository paymentRepo;
+    private ReservationRepository reservationRepo;
+    private PaymentService paymentService;
 
-    @InjectMocks
-    private PaymentService paymentService; // payReservation 메서드가 들어있는 서비스
-
-    @Test
-    void 예약이_만료된_경우_실패() {
-        long userId = 1L, reservationId = 100L;
-        Reservation expiredReservation = new Reservation(reservationId, userId, 1L, 1L, -1);
-        ConcertSeat concertSeat = new ConcertSeat(1L, 1L, false, 10000L);
-        Payment payment = new Payment(userId, 20000L);
-
-        when(concertRepo.getReservationById(reservationId)).thenReturn(expiredReservation);
-        when(concertRepo.getConcertSeatById(1L)).thenReturn(concertSeat);
-        when(paymentRepo.getBalance(userId)).thenReturn(payment);
-        assertThrows(APIException.class, () ->
-                paymentService.payReservation(userId, reservationId));
+    @BeforeEach
+    void setUp() {
+        paymentRepo = mock(PaymentRepository.class);
+        reservationRepo = mock(ReservationRepository.class);
+        paymentService = new PaymentService(paymentRepo, reservationRepo);
     }
 
     @Test
-    void 이미_결제된_예약건에_대한_결제_시도_실패() {
-        long userId = 1L, reservationId = 100L;
-        Reservation expiredReservation = new Reservation(reservationId, userId, 1L, 1L, 1);
-        ConcertSeat concertSeat = new ConcertSeat(1L, 1L, false, 10000L);
-        Payment payment = new Payment(userId, 20000L);
+    @DisplayName("payForReservation - 예약 존재하지 않으면 예외 발생")
+    void payForReservation_should_throw_if_reservation_not_found() {
+        // given
+        long userId = 1L;
+        long reservationId = 100L;
+        PaymentCommand.Pay command = PaymentCommand.Pay.of(userId, reservationId);
+        when(reservationRepo.getReservationByUserIdAndReservationId(userId, reservationId))
+                .thenReturn(Optional.empty());
 
-        when(concertRepo.getReservationById(reservationId)).thenReturn(expiredReservation);
-        when(concertRepo.getConcertSeatById(1L)).thenReturn(concertSeat);
-        when(paymentRepo.getBalance(userId)).thenReturn(payment);
-        assertThrows(APIException.class, () ->
-                paymentService.payReservation(userId, reservationId));
+        // when & then
+        assertThatThrownBy(() -> paymentService.payForReservation(command))
+                .isInstanceOf(APIException.class)
+                .hasMessageContaining(ResponseCodeEnum.RESERVATION_NOT_FOUND.getMessage());
     }
 
     @Test
-    void 좌석가격이_잔금보다_클_경우_실패() {
-        long userId = 1L, reservationId = 100L;
-        Reservation reservation = new Reservation(reservationId, userId, 1L, 1L, 0);
-        ConcertSeat concertSeat = new ConcertSeat(1L, 1L, false, 20000L);
-        Payment payment = new Payment(userId, 10000L);
+    @DisplayName("payForReservation - 정상 결제 흐름")
+    void payForReservation_should_use_payment_and_update_balance() {
+        // given
+        long userId = 1L;
+        long reservationId = 100L;
+        long seatPrice = 5000L;
 
-        when(concertRepo.getReservationById(reservationId)).thenReturn(reservation);
-        when(concertRepo.getConcertSeatById(1L)).thenReturn(concertSeat);
-        when(paymentRepo.getBalance(userId)).thenReturn(payment);
-        assertThrows(APIException.class, () ->
-                paymentService.payReservation(userId, reservationId));;
-    }
-
-    @Test
-    void 좌석가격만큼_잔금이_차감된다() {
-        long userId = 1L, reservationId = 100L;
-        Reservation reservation = new Reservation(reservationId, userId, 1L, 1L, 0);
-        ConcertSeat concertSeat = new ConcertSeat(1L, 1L, false, 20_000L);
-        Payment payment = mock(Payment.class);
-
-        when(concertRepo.getReservationById(reservationId)).thenReturn(reservation);
-        when(concertRepo.getConcertSeatById(1L)).thenReturn(concertSeat);
-        when(paymentRepo.getBalance(userId)).thenReturn(payment);
-
-        paymentService.payReservation(userId, reservationId);
-
-        verify(payment).use(20_000L); // 잔금이 정확히 차감됐는지
-        verify(paymentRepo).updateBalance(payment);
-    }
-
-    @Test
-    void 예약상태가_정상적으로_변경된다() {
-        long userId = 1L, reservationId = 100L;
-        Reservation reservation = mock(Reservation.class);
         ConcertSeat seat = mock(ConcertSeat.class);
-        Payment payment = mock(Payment.class);
+        when(seat.getPrice()).thenReturn(seatPrice);
 
-        when(reservation.getSeatId()).thenReturn(10L);
-        when(reservation.getReservationId()).thenReturn(reservationId);
-        when(reservation.getStatusEnum()).thenReturn(1L);
+        Reservation reservation = mock(Reservation.class);
+        when(reservation.getSeat()).thenReturn(seat);
+        doNothing().when(reservation).validateStatusEnum();
 
-        when(concertRepo.getReservationById(reservationId)).thenReturn(reservation);
-        when(concertRepo.getConcertSeatById(10L)).thenReturn(seat);
-        when(paymentRepo.getBalance(userId)).thenReturn(payment);
+        Payment payment = Payment.of(userId, 10000L); // 충분한 금액 보유
 
-        paymentService.payReservation(userId, reservationId);
+        when(reservationRepo.getReservationByUserIdAndReservationId(userId, reservationId))
+                .thenReturn(Optional.of(reservation));
+        when(paymentRepo.getPaymentByUserId(userId)).thenReturn(payment);
 
-        verify(reservation).pay(); // 상태 변경 메서드 호출됐는지
-        verify(concertRepo).updateReservationStatus(reservationId, 1);
+        // when
+        paymentService.payForReservation(PaymentCommand.Pay.of(userId, reservationId));
+
+        // then
+        assertThat(payment.getBalance()).isEqualTo(5000L);
+        verify(paymentRepo).updateBalance(userId, 5000L);
+    }
+
+    @Test
+    @DisplayName("getBalance - 잔액 조회 결과 반환")
+    void getBalance_should_return_payment_result() {
+        // given
+        long userId = 1L;
+        Payment payment = Payment.of(userId, 3000L);
+        when(paymentRepo.getPaymentByUserId(userId)).thenReturn(payment);
+
+        // when
+        PaymentResult result = paymentService.getBalance(PaymentCommand.Get.of(userId));
+
+        // then
+        assertThat(result.getUserId()).isEqualTo(userId);
+        assertThat(result.getBalance()).isEqualTo(3000L);
+    }
+
+    @Test
+    @DisplayName("chargeBalance - 충전하면 잔액 증가하고 업데이트됨")
+    void chargeBalance_should_increase_balance_and_update() {
+        // given
+        long userId = 1L;
+        long amount = 2000L;
+        Payment payment = Payment.of(userId, 3000L);
+
+        when(paymentRepo.getPaymentByUserId(userId)).thenReturn(payment);
+
+        // when
+        PaymentResult result = paymentService.chargeBalance(PaymentCommand.Charge.of(userId, amount));
+
+        // then
+        assertThat(result.getBalance()).isEqualTo(5000L);
+        verify(paymentRepo).updateBalance(userId, 5000L);
     }
 }

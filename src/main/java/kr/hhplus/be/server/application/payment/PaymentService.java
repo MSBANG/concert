@@ -1,57 +1,45 @@
 package kr.hhplus.be.server.application.payment;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.domain.concert.ConcertRepository;
-import kr.hhplus.be.server.domain.concert.domain.ConcertSeat;
-import kr.hhplus.be.server.domain.concert.domain.Reservation;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import kr.hhplus.be.server.domain.reservation.Reservation;
+import kr.hhplus.be.server.domain.reservation.ReservationRepository;
+import kr.hhplus.be.server.support.APIException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
     private final PaymentRepository paymentRepo;
-    private final PaymentMapper paymentMapper;
-    private final ConcertRepository concertRepo;
+    private final ReservationRepository reservationRepo;
 
-    @Autowired
-    public PaymentService(PaymentRepository paymentRepo, PaymentMapper paymentMapper, ConcertRepository concertRepo) {
-        this.paymentRepo = paymentRepo;
-        this.paymentMapper = paymentMapper;
-        this.concertRepo = concertRepo;
-    }
-
-    // 잔금 조회
-    public PaymentCommand getBalance(long userId){
-        Payment payment = paymentRepo.getBalance(userId);
-        return paymentMapper.toCommand(payment);
-    }
-
-    // 잔금 충전
-    public PaymentCommand chargeBalance(long userId, long amount) {
-        Payment payment = paymentRepo.getBalance(userId);
-        payment.charge(amount);
-        paymentRepo.updateBalance(payment);
-        return paymentMapper.toCommand(payment);
-    }
-
-
-    // 예약 결제
+    // 예약건에 대한 결제 요청
+    // 목록에서 예약건을 확인한 다음, 예약건을 특정하여 Command 로 들어온 상태
     @Transactional
-    public void payReservation(long userId, long reservationId){
-        // 예약 조회
-        Reservation reservation = concertRepo.getReservationById(reservationId);
-        // 예약된 좌석 조회
-        ConcertSeat concertSeat = concertRepo.getConcertSeatById(reservation.getSeatId());
-        // 잔금 조회
-        Payment payment = paymentRepo.getBalance(userId);
-        // 잔금 사용
-        payment.use(concertSeat.getPrice());
-        // 예약 entity 상태 변경
-        reservation.pay();
+    public void payForReservation(PaymentCommand.Pay command){
+        Reservation reservation = reservationRepo.getReservationByUserIdAndReservationId(command.getUserId(), command.getReservationId())
+                .orElseThrow(APIException::reservationNotFound);
+        reservation.validateStatusEnum();
+        Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
+        payment.use(reservation.getSeat().getPrice());
+        paymentRepo.updateBalance(payment.getUserId(), payment.getBalance());
+    }
 
-        paymentRepo.updateBalance(payment);
-        concertRepo.updateReservationStatus(reservation.getReservationId(), reservation.getStatusEnum());
+    // 잔금 조회 요청
+    public PaymentResult getBalance(PaymentCommand.Get command) {
+        Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
+        return PaymentResult.from(payment);
+    }
+
+    @Transactional
+    // 잔금 충전 요청
+    public PaymentResult chargeBalance(PaymentCommand.Charge command) {
+        Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
+        payment.charge(command.getAmount());
+        paymentRepo.updateBalance(payment.getUserId(), payment.getBalance());
+        return PaymentResult.from(payment);
     }
 }
