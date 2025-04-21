@@ -108,8 +108,8 @@ class ConcertServiceUnitTest {
 
         ConcertSchedule concertSchedule = new ConcertSchedule(); // Assuming Schedule exists with valid data
         ReflectionTestUtils.setField(concertSchedule, "scheduleId", scheduleId);
-        ConcertSeat seat1 = ConcertSeat.create(1L, concertSchedule, 100L, true, 1);
-        ConcertSeat seat2 = ConcertSeat.create(2L, concertSchedule, 150L, false, 2);
+        ConcertSeat seat1 = ConcertSeat.create(concertSchedule, 100L, true, 1);
+        ConcertSeat seat2 = ConcertSeat.create(concertSchedule, 150L, false, 2);
 
         List<ConcertSeat> seats = List.of(seat1, seat2);
 

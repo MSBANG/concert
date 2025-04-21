@@ -8,4 +8,6 @@ public interface ReservationRepository {
     List<Reservation> getReservationsByUserId(long userId);
     Optional<Reservation> getReservationByUserIdAndReservationId(long userId, long reservationId);
     void save(Reservation reservation);
+
+    Optional<Reservation> findBySeatId(long seatId);
 }

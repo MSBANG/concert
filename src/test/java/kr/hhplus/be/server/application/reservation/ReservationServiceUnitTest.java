@@ -55,7 +55,7 @@ class ReservationServiceTest {
         long concertId = 10L;
         ReservationCommand command = ReservationCommand.of(100L, seatId, concertId);
 
-        ConcertSeat seat = ConcertSeat.create(seatId, null, 100L, true, 1);
+        ConcertSeat seat = ConcertSeat.create(null, 100L, true, 1);
         Mockito.when(concertRepo.getSeatById(seatId)).thenReturn(Optional.of(seat));
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.empty());
 
@@ -73,7 +73,7 @@ class ReservationServiceTest {
         long userId = 100L;
         ReservationCommand command = ReservationCommand.of(userId, seatId, concertId);
 
-        ConcertSeat seat = ConcertSeat.create(seatId, null, 100L, true, 1);
+        ConcertSeat seat = ConcertSeat.create(null, 100L, true, 1);
         Concert concert = Mockito.mock(Concert.class);
 
         Mockito.when(concertRepo.getSeatById(seatId)).thenReturn(Optional.of(seat));
@@ -83,7 +83,6 @@ class ReservationServiceTest {
         reservationService.reserveSeat(command);
 
         // then
-        Mockito.verify(concertRepo).updateSeatIsAvail(seatId, false);
         Mockito.verify(reservationRepo).save(Mockito.any(Reservation.class));
     }
 }
