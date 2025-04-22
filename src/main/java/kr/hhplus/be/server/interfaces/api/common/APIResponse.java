@@ -91,4 +91,13 @@ public record APIResponse(
     public static APIResponse allSeatReserved() {
         return new APIResponse(false, ResponseCodeEnum.ALL_SEATS_RESERVED.getStatusCode(), ResponseCodeEnum.ALL_SEATS_RESERVED.getMessage(), null);
     }
+
+    public static APIResponse invalidReservationExecuting() {
+        return new APIResponse(false, ResponseCodeEnum.INVALID_RESERVATION_EXECUTING.getStatusCode(), ResponseCodeEnum.INVALID_RESERVATION_EXECUTING.getMessage(), null);    }
+
+    public static APIResponse queueTokenNotReady() {
+        return new APIResponse(false, ResponseCodeEnum.QUEUE_TOKEN_NOT_READY.getStatusCode(), ResponseCodeEnum.QUEUE_TOKEN_NOT_READY.getMessage(), null);    }
+
+    public static APIResponse queueExpiredOrInvalid() {
+        return new APIResponse(false, ResponseCodeEnum.QUEUE_EXPIRED_OR_INVALID.getStatusCode(), ResponseCodeEnum.QUEUE_EXPIRED_OR_INVALID.getMessage(), null);    }
 }
