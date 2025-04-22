@@ -33,7 +33,7 @@ public class Queue extends BaseEntity {
 
     // 대기열 진입한 상태로 변경되고, expireIn 안에 예약을 진행하지 않으면 토큰 무효화
     // 사용자가 계속 Queue 확인을 하지 않으면 무효화 => 스케줄러 필요
-    private long expireIn;
+    private LocalDateTime expireIn;
 
     @Builder
     private Queue(User user, Concert concert, boolean isInProgress) {
@@ -53,6 +53,6 @@ public class Queue extends BaseEntity {
     // Queue 상태 변경 (예약진행 중, )
     public void approachQueue() {
         this.isInProgress = true;
-        this.expireIn = System.currentTimeMillis() + 1000 * 60 * 5;
+        this.expireIn = LocalDateTime.now().plusMinutes(5L);
     }
 }
