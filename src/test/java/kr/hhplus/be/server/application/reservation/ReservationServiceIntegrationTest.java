@@ -5,12 +5,16 @@ import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.queue.Queue;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.reservation.ReservationStatusEnum;
+import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.infrastructure.concert.ConcertJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertScheduleJpaRepository;
 import kr.hhplus.be.server.infrastructure.concert.ConcertSeatJpaRepository;
+import kr.hhplus.be.server.infrastructure.queue.QueueJPARepository;
+import kr.hhplus.be.server.infrastructure.queue.QueueTokenGenerator;
 import kr.hhplus.be.server.interfaces.api.common.ResponseCodeEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,22 +55,26 @@ class ReservationServiceIntegrationTest {
 
     @Autowired
     private ConcertScheduleJpaRepository scheduleJpaRepository;
+    @Autowired
+    private QueueJPARepository queueJPARepository;
+    @Autowired
+    private QueueTokenGenerator queueTokenGenerator;
 
     @Test
     @Transactional
     @DisplayName("좌석 예약이 정상적으로 진행된다")
     void seatReservationIntegrationTest() {
         // given
+        User user = new User(1L);
         Concert concert = concertJpaRepository.save(Concert.create("AI 콘서트"));
+        Queue queue = Queue.of(user, concert, false);
+        String queueToken = queueTokenGenerator.encode(queue);
         ConcertSchedule schedule = scheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDate.now()));
-        ConcertSeat seat = seatJpaRepository.save(
-                ConcertSeat.create(schedule, 15000, true, 1)
-        );
+        ConcertSeat seat = seatJpaRepository.save(ConcertSeat.create(schedule, concert, 10000L, true, 10));
 
         ReservationCommand command = ReservationCommand.of(
-                1L,
                 seat.getSeatId(),
-                concert.getConcertId()
+                queueToken
         );
 
         // when
@@ -88,7 +96,7 @@ class ReservationServiceIntegrationTest {
         // given
         Concert concert = concertJpaRepository.save(Concert.create("동시성 테스트"));
         ConcertSchedule schedule = scheduleJpaRepository.save(ConcertSchedule.create(concert, LocalDate.now()));
-        ConcertSeat seat = seatJpaRepository.save(ConcertSeat.create(schedule, 100000L, true, 1));
+        ConcertSeat seat = seatJpaRepository.save(ConcertSeat.create(schedule, concert, 100000L, true, 1));
 
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
 
@@ -98,10 +106,10 @@ class ReservationServiceIntegrationTest {
 
         AtomicInteger successCount = new AtomicInteger(0);
         AtomicInteger failCount = new AtomicInteger(0);
-
         for (int i = 0; i < THREAD_COUNT; i++) {
             final long userId = i + 1;
-
+            User user = new User(userId);
+            Queue queue = Queue.of(user, concert, false);
             executorService.submit(() -> {
                 try {
                     readyLatch.countDown();
@@ -109,8 +117,7 @@ class ReservationServiceIntegrationTest {
 
                     ReservationCommand command = ReservationCommand.of(
                             userId,
-                            seat.getSeatId(),
-                            concert.getConcertId()
+                            queueTokenGenerator.encode(queue)
                     );
                     reservationService.reserveSeat(command);
                     successCount.incrementAndGet();
