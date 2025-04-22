@@ -23,6 +23,10 @@ public class ConcertSeat extends BaseEntity {
     @JoinColumn(name = "scheduleId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ConcertSchedule concertSchedule;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "concertId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Concert concert;
+
     private long price;
     private boolean isAvail;
     private int seatNum;
@@ -31,7 +35,7 @@ public class ConcertSeat extends BaseEntity {
     List<Reservation> reservations;
 
     @Builder
-    private ConcertSeat(long seatId, ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+    private ConcertSeat(long seatId, ConcertSchedule concertSchedule, Concert concert, long price, boolean isAvail, int seatNum) {
         this.seatId = seatId;
         this.concertSchedule = concertSchedule;
         this.price = price;
@@ -39,9 +43,10 @@ public class ConcertSeat extends BaseEntity {
         this.seatNum = seatNum;
     }
 
-    public static ConcertSeat create(ConcertSchedule concertSchedule, long price, boolean isAvail, int seatNum) {
+    public static ConcertSeat create(ConcertSchedule concertSchedule, Concert concert, long price, boolean isAvail, int seatNum) {
         return ConcertSeat.builder()
                 .concertSchedule(concertSchedule)
+                .concert(concert)
                 .price(price)
                 .isAvail(isAvail)
                 .seatNum(seatNum)

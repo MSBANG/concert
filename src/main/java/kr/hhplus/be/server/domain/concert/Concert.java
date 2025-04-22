@@ -16,6 +16,10 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long concertId;
     private String name;
+    
+    // 전체 좌석 예약 가능 여부, 스케줄러로 변경
+    @Column(columnDefinition = "boolean default true")
+    private boolean isAvail;
 
     @OneToMany(mappedBy = "concert")
     List<ConcertSchedule> schedules;

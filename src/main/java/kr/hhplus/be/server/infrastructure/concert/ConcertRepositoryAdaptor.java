@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.infrastructure.concert;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
@@ -16,6 +18,9 @@ public class ConcertRepositoryAdaptor implements ConcertRepository {
     private final ConcertJpaRepository concertJpaRepository;
     private final ConcertScheduleJpaRepository concertScheduleJpaRepository;
     private final ConcertSeatJpaRepository concertSeatJpaRepository;
+
+    @PersistenceContext
+    private final EntityManager em;
 
 
     @Override
@@ -46,5 +51,17 @@ public class ConcertRepositoryAdaptor implements ConcertRepository {
     @Override
     public List<ConcertSeat> getAllSeats(long scheduleId) {
         return concertSeatJpaRepository.findAllByConcertSchedule_ScheduleId(scheduleId);
+    }
+
+    @Override
+    public boolean getConcertIsAvailByConcertId(long concertId) {
+        return concertJpaRepository.findIsAvailByConcertId(concertId);
+    }
+
+    @Override
+    public long save(Concert concert) {
+        em.persist(concert);
+        em.flush();
+        return concert.getConcertId();
     }
 }
