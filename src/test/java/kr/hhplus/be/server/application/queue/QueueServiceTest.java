@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -85,7 +84,7 @@ class QueueServiceTest {
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);
-        Mockito.when(queueRepo.getQueueWaitingNum(queueId, concertId)).thenReturn(5L);
+        Mockito.when(queueRepo.getQueueWaitingCount(queueId, concertId)).thenReturn(5L);
         Mockito.when(queueTokenGenerator.encode(Mockito.any(Queue.class))).thenReturn("dummyToken");
 
         QueueResult result = queueService.getQueueToken(command);
@@ -94,7 +93,7 @@ class QueueServiceTest {
         Assertions.assertNotNull(result.getExpiresIn());
         Assertions.assertEquals("dummyToken", result.getQueueToken());
 
-        Mockito.verify(queueRepo).getQueueWaitingNum(queueId, concertId);
+        Mockito.verify(queueRepo).getQueueWaitingCount(queueId, concertId);
     }
 
     @Test
@@ -108,7 +107,7 @@ class QueueServiceTest {
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);
-        Mockito.when(queueRepo.getQueueWaitingNum(queueId, concertId)).thenReturn(10L); // 초과
+        Mockito.when(queueRepo.getQueueWaitingCount(queueId, concertId)).thenReturn(10L); // 초과
         Mockito.when(queueTokenGenerator.encode(Mockito.any(Queue.class))).thenReturn("waitingToken");
 
         QueueResult result = queueService.getQueueToken(command);
@@ -117,7 +116,7 @@ class QueueServiceTest {
         Assertions.assertNull(result.getExpiresIn());
         Assertions.assertEquals(10L, result.getWaitingNum());
 
-        Mockito.verify(queueRepo).getQueueWaitingNum(queueId, concertId);
+        Mockito.verify(queueRepo).getQueueWaitingCount(queueId, concertId);
         Mockito.verify(queueTokenGenerator).encode(Mockito.any(Queue.class));
     }
 }
