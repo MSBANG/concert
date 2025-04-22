@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,5 +38,15 @@ public class QueueRepositoryAdaptor implements QueueRepository {
         em.persist(queue);
         em.flush();
         return queue.getQueueId();
+    }
+
+    @Override
+    public void remove(Queue queue) {
+        em.remove(queue);
+    }
+
+    @Override
+    public Optional<Queue> getQueueById(long queueId) {
+        return queueJPARepo.findById(queueId);
     }
 }
