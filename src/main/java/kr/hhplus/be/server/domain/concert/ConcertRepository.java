@@ -10,4 +10,5 @@ public interface ConcertRepository {
     List<Concert> getAllConcerts();
     List<ConcertSchedule> getAllConcertSchedules(long concertId);
     List<ConcertSeat> getAllSeats(long scheduleId);
+    boolean getConcertIsAvailByConcertId(long concertId);
 }

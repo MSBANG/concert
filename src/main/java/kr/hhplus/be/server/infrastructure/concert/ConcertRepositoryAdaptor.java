@@ -47,4 +47,9 @@ public class ConcertRepositoryAdaptor implements ConcertRepository {
     public List<ConcertSeat> getAllSeats(long scheduleId) {
         return concertSeatJpaRepository.findAllByConcertSchedule_ScheduleId(scheduleId);
     }
+
+    @Override
+    public boolean getConcertIsAvailByConcertId(long concertId) {
+        return concertJpaRepository.findIsAvailByConcertId(concertId);
+    }
 }
