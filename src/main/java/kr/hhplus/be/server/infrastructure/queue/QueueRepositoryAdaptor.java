@@ -28,21 +28,14 @@ public class QueueRepositoryAdaptor implements QueueRepository {
     }
 
     @Override
-    public long getOrSave(Queue queue) {
-        Queue queueInDB = this.getQueueByConcertIdAndUserId(
-                queue.getUser().getUserId(),
-                queue.getConcert().getConcertId()
-        );
-        if (queueInDB != null) {
-            return queue.getQueueId();
-        }
-        em.persist(queue);
-        em.flush();
-        return queue.getQueueId();
+    public Queue getQueueByConcertIdAndUserId(long userId, long concertId) {
+        return queueJPARepo.findByUser_userIdAndConcert_concertId(userId, concertId);
     }
 
     @Override
-    public Queue getQueueByConcertIdAndUserId(long userId, long concertId) {
-        return queueJPARepo.findByUser_userIdAndConcert_concertId(userId, concertId);
+    public long save(Queue queue) {
+        em.persist(queue);
+        em.flush();
+        return queue.getQueueId();
     }
 }

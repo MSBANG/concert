@@ -2,11 +2,12 @@ package kr.hhplus.be.server.domain.queue;
 
 
 import java.util.List;
+import java.util.Map;
 
 public interface QueueRepository {
     List<Queue> getQueuesByConcertId(long concertId);
 
     long getQueueWaitingNum(long queueId, long concertId);
-    long getOrSave(Queue queue);
     Queue getQueueByConcertIdAndUserId(long userId, long concertId);
+    long save(Queue queue);
 }
