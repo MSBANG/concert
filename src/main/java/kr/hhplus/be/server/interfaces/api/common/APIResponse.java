@@ -87,4 +87,8 @@ public record APIResponse(
     public static APIResponse reservationNotFound() {
         return new APIResponse(false, ResponseCodeEnum.RESERVATION_NOT_FOUND.getStatusCode(), ResponseCodeEnum.RESERVATION_NOT_FOUND.getMessage(), null);
     }
+
+    public static APIResponse allSeatReserved() {
+        return new APIResponse(false, ResponseCodeEnum.ALL_SEATS_RESERVED.getStatusCode(), ResponseCodeEnum.ALL_SEATS_RESERVED.getMessage(), null);
+    }
 }

@@ -41,4 +41,5 @@ public class APIException extends RuntimeException {
     public static APIException scheduleNotFound() { return new APIException(APIResponse.scheduleNotFound()); }
     public static APIException seatNotFound() { return new APIException(APIResponse.seatNotFound()); }
     public static APIException reservationNotFound() { return new APIException(APIResponse.reservationNotFound()); }
+    public static APIException allSeatReserved() { return new APIException(APIResponse.allSeatReserved()); }
 }

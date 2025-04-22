@@ -29,7 +29,8 @@ public enum ResponseCodeEnum {
     RESERVATION_NOT_FOUND(404, "RESERVATION_NOT_FOUND"),
 
     //예약 Exception
-    SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED");
+    SEAT_ALREADY_RESERVED(400, "SEAT_ALREADY_RESERVED"),
+    ALL_SEATS_RESERVED(400, "ALL_SEATS_RESERVED");
 
     private final int statusCode;
     private final String message;
