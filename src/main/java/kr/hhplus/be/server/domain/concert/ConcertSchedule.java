@@ -24,9 +24,6 @@ public class ConcertSchedule extends BaseEntity {
 
     private LocalDate startDate;
 
-    @OneToMany(mappedBy = "concertSchedule")
-    private List<ConcertSeat> seats;
-
     @Builder
     private ConcertSchedule(Concert concert, LocalDate startDate) {
         this.concert = concert;
