@@ -34,6 +34,10 @@ public class ConcertSeat extends BaseEntity {
     @OneToMany(mappedBy = "seat")
     List<Reservation> reservations;
 
+    @Version
+    @Column(name = "OPTLOCK")
+    private long version;
+
     @Builder
     private ConcertSeat(long seatId, ConcertSchedule concertSchedule, Concert concert, long price, boolean isAvail, int seatNum) {
         this.seatId = seatId;
