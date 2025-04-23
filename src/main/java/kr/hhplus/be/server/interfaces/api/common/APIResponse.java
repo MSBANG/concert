@@ -100,4 +100,7 @@ public record APIResponse(
 
     public static APIResponse queueExpiredOrInvalid() {
         return new APIResponse(false, ResponseCodeEnum.QUEUE_EXPIRED_OR_INVALID.getStatusCode(), ResponseCodeEnum.QUEUE_EXPIRED_OR_INVALID.getMessage(), null);    }
+
+    public static APIResponse optimisticLockException() {
+        return new APIResponse(false, ResponseCodeEnum.OPTIMISTIC_LOCK_EXCEPTION.getStatusCode(), ResponseCodeEnum.OPTIMISTIC_LOCK_EXCEPTION.getMessage(), null);    }
 }

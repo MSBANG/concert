@@ -79,12 +79,21 @@ public class Reservation extends BaseEntity {
         }
     }
 
+    // TODO: reservation version 추가 이후 Optimistic Exception 예외처리 추가
     public void expire() {
-        this.statusEnum = ReservationStatusEnum.EXPIRED;
+        try{
+            this.statusEnum = ReservationStatusEnum.EXPIRED;
+        } catch (OptimisticLockException e) {
+            throw APIException.optimisticLockException();
+        }
     }
 
     public void pay() {
-        this.statusEnum = ReservationStatusEnum.PAID;
+        try {
+            this.statusEnum = ReservationStatusEnum.PAID;
+        } catch (OptimisticLockException e) {
+            throw APIException.optimisticLockException();
+        }
     }
 }
 
