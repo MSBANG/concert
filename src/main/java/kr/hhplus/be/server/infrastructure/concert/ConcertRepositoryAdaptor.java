@@ -59,7 +59,7 @@ public class ConcertRepositoryAdaptor implements ConcertRepository {
     }
 
     @Override
-    public long save(Concert concert) {
+    public long saveConcert(Concert concert) {
         em.persist(concert);
         em.flush();
         return concert.getConcertId();

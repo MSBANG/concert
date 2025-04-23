@@ -11,5 +11,5 @@ public interface ConcertRepository {
     List<ConcertSchedule> getAllConcertSchedules(long concertId);
     List<ConcertSeat> getAllSeats(long scheduleId);
     boolean getConcertIsAvailByConcertId(long concertId);
-    long save(Concert concert);
+    long saveConcert(Concert concert);
 }
