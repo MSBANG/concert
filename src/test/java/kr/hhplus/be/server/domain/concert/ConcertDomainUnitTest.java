@@ -15,7 +15,8 @@ public class ConcertDomainUnitTest {
     @DisplayName("예약 가능한 좌석은 정상적으로 reserve 호출됨")
     void reserveSuccessTest() {
         // given
-        ConcertSeat seat = ConcertSeat.create(null, 100L, true, 1);
+        Concert concert = Concert.create("TEST CONCERT");
+        ConcertSeat seat = ConcertSeat.create(null, concert, 1000L, true, 50);
         ReflectionTestUtils.setField(seat, "seatId", 1L);
 
         // when
@@ -29,7 +30,8 @@ public class ConcertDomainUnitTest {
     @DisplayName("이미 예약된 좌석은 reserve 호출 시 APIException 발생")
     void reserveFailWhenAlreadyReservedTest() {
         // given
-        ConcertSeat seat = ConcertSeat.create(null, 100L, false, 1);
+        Concert concert = Concert.create("TEST CONCERT");
+        ConcertSeat seat = ConcertSeat.create(null, concert, 10000L, false, 50);
         ReflectionTestUtils.setField(seat, "seatId", 2L);
 
         // when & then

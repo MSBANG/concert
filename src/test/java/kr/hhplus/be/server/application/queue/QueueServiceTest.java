@@ -45,7 +45,7 @@ class QueueServiceTest {
     @DisplayName("콘서트가 존재하지 않으면 예외 발생")
     void testConcertNotFound() {
         QueueCommand command = QueueCommand.of(user, concert);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
 
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.empty());
 
@@ -60,7 +60,7 @@ class QueueServiceTest {
     @DisplayName("모든 좌석이 예약되었으면 예외 발생")
     void testAllSeatReserved() {
         QueueCommand command = QueueCommand.of(user, concert);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
 
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(false);
@@ -79,8 +79,8 @@ class QueueServiceTest {
         QueueCommand command = QueueCommand.of(user, concert);
         Queue queue = Queue.of(user, concert, false);
         long queueId = 42L;
-        long concertId = concertRepo.save(concert);
-        concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
+        concertRepo.saveConcert(concert);
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);
@@ -101,9 +101,9 @@ class QueueServiceTest {
     void testQueueWaiting() {
         QueueCommand command = QueueCommand.of(user, concert);
         Queue queue = Queue.of(user, concert, false);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
         long queueId = 99L;
-        concertRepo.save(concert);
+        concertRepo.saveConcert(concert);
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);

@@ -72,7 +72,7 @@ class PaymentServiceTest {
 
         // then
         assertThat(payment.getBalance()).isEqualTo(5000L);
-        verify(paymentRepo).updateBalance(userId, 5000L);
+        verify(payment).use(5000L);
     }
 
     @Test
@@ -106,6 +106,6 @@ class PaymentServiceTest {
 
         // then
         assertThat(result.getBalance()).isEqualTo(5000L);
-        verify(paymentRepo).updateBalance(userId, 5000L);
+        verify(payment).charge(5000L);
     }
 }

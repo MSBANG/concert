@@ -2,9 +2,13 @@ package kr.hhplus.be.server.application.reservation;
 
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
+import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.queue.Queue;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
+import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.infrastructure.queue.QueueTokenGenerator;
 import kr.hhplus.be.server.support.APIException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,13 +37,20 @@ class ReservationServiceTest {
     @InjectMocks
     private ReservationService reservationService;
 
+    @Autowired
+    private QueueTokenGenerator queueTokenGenerator;
+
     @Test
     @DisplayName("좌석이 없을 경우 seatNotFound 예외 발생")
     void testSeatNotFoundException() {
         // given
         long seatId = 1L;
-        long concertId = 10L;
-        ReservationCommand command = ReservationCommand.of(100L, seatId, concertId);
+        User user = new User(1L);
+        Concert concert = Concert.create("TEST CONCERT");
+
+        Queue queue = Queue.of(user, concert, false);
+
+        ReservationCommand command = ReservationCommand.of(seatId, queueTokenGenerator.encode(queue));
 
         Mockito.when(concertRepo.getSeatById(seatId)).thenReturn(Optional.empty());
 
@@ -53,9 +65,13 @@ class ReservationServiceTest {
         // given
         long seatId = 1L;
         long concertId = 10L;
-        ReservationCommand command = ReservationCommand.of(100L, seatId, concertId);
+        User user = new User(1L);
+        Concert concert = Concert.create("TEST CONCERT");
+        Queue queue = Queue.of(user, concert, false);
 
-        ConcertSeat seat = ConcertSeat.create(null, 100L, true, 1);
+        ReservationCommand command = ReservationCommand.of(100L, queueTokenGenerator.encode(queue));
+
+        ConcertSeat seat = ConcertSeat.create(null, concert, 10000L, true, 1);
         Mockito.when(concertRepo.getSeatById(seatId)).thenReturn(Optional.of(seat));
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.empty());
 
@@ -71,10 +87,14 @@ class ReservationServiceTest {
         long seatId = 1L;
         long concertId = 10L;
         long userId = 100L;
-        ReservationCommand command = ReservationCommand.of(userId, seatId, concertId);
 
-        ConcertSeat seat = ConcertSeat.create(null, 100L, true, 1);
-        Concert concert = Mockito.mock(Concert.class);
+        User user = new User(1L);
+        Concert concert = Concert.create("TEST CONCERT");
+        Queue queue = Queue.of(user, concert, false);
+
+        ReservationCommand command = ReservationCommand.of(userId, queueTokenGenerator.encode(queue));
+        ConcertSchedule schedule = Mockito.mock(ConcertSchedule.class);
+        ConcertSeat seat = ConcertSeat.create(null, concert, 10000L, true, 50);
 
         Mockito.when(concertRepo.getSeatById(seatId)).thenReturn(Optional.of(seat));
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
