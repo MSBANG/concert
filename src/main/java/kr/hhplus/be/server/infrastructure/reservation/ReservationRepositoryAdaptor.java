@@ -37,4 +37,9 @@ public class ReservationRepositoryAdaptor implements ReservationRepository {
     public Optional<Reservation> findBySeatId(long seatId) {
         return reservationJpaRepository.findBySeat_SeatId(seatId);
     }
+
+    @Override
+    public List<Reservation> getReservationsByConcertId(long concertId) {
+        return reservationJpaRepository.findByConcert_ConcertId(concertId);
+    }
 }
