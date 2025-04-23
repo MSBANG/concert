@@ -61,7 +61,7 @@ class PaymentServiceTest {
         when(reservation.getSeat()).thenReturn(seat);
         doNothing().when(reservation).validateStatusEnum();
 
-        Payment payment = Payment.of(userId, 10000L); // 충분한 금액 보유
+        Payment payment = Payment.create(userId, 10000L); // 충분한 금액 보유
 
         when(reservationRepo.getReservationByUserIdAndReservationId(userId, reservationId))
                 .thenReturn(Optional.of(reservation));
@@ -80,7 +80,7 @@ class PaymentServiceTest {
     void getBalance_should_return_payment_result() {
         // given
         long userId = 1L;
-        Payment payment = Payment.of(userId, 3000L);
+        Payment payment = Payment.create(userId, 3000L);
         when(paymentRepo.getPaymentByUserId(userId)).thenReturn(payment);
 
         // when
@@ -97,7 +97,7 @@ class PaymentServiceTest {
         // given
         long userId = 1L;
         long amount = 2000L;
-        Payment payment = Payment.of(userId, 3000L);
+        Payment payment = Payment.create(userId, 3000L);
 
         when(paymentRepo.getPaymentByUserId(userId)).thenReturn(payment);
 
