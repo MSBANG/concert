@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.reservation;
 
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
@@ -14,6 +15,7 @@ import kr.hhplus.be.server.support.APIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,7 +54,8 @@ public class ReservationService {
                 queue.getUser().getUserId(),
                 seat,
                 concert,
-                ReservationStatusEnum.RESERVED
+                ReservationStatusEnum.RESERVED,
+                LocalDateTime.now().plusMinutes(5)
         );
         reservationRepo.save(reservation);
         queueRepository.remove(queue); //polling
