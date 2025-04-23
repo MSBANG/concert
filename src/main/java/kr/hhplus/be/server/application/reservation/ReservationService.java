@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.reservation;
 
-import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
@@ -67,5 +66,16 @@ public class ReservationService {
         return reservations.stream()
                 .map(ReservationResult::from)
                 .toList();
+    }
+
+    // 스케줄러 용 예약 만료 기능
+    public void expireReservations() {
+        List<Reservation> reservations = reservationRepo.getAllExpiredReservations();
+        for (Reservation reservation:reservations) {
+            if (LocalDateTime.now().isAfter(reservation.getExpiresIn())) {
+                reservation.expire();
+                reservationRepo.save(reservation);
+            }
+        }
     }
 }
