@@ -82,5 +82,9 @@ public class Reservation extends BaseEntity {
     public void expire() {
         this.statusEnum = ReservationStatusEnum.EXPIRED;
     }
+
+    public void pay() {
+        this.statusEnum = ReservationStatusEnum.PAID;
+    }
 }
 
