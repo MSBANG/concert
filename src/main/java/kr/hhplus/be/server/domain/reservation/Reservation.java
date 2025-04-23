@@ -24,11 +24,11 @@ public class Reservation extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seatId")
+    @JoinColumn(name = "seatId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ConcertSeat seat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "concertId")
+    @JoinColumn(name = "concertId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Concert concert;
 
     @Enumerated(EnumType.STRING)
@@ -78,22 +78,12 @@ public class Reservation extends BaseEntity {
             }
         }
     }
-
-    // TODO: reservation version 추가 이후 Optimistic Exception 예외처리 추가
     public void expire() {
-        try{
-            this.statusEnum = ReservationStatusEnum.EXPIRED;
-        } catch (OptimisticLockException e) {
-            throw APIException.optimisticLockException();
-        }
+        this.statusEnum = ReservationStatusEnum.EXPIRED;
     }
 
     public void pay() {
-        try {
-            this.statusEnum = ReservationStatusEnum.PAID;
-        } catch (OptimisticLockException e) {
-            throw APIException.optimisticLockException();
-        }
+        this.statusEnum = ReservationStatusEnum.PAID;
     }
 }
 
