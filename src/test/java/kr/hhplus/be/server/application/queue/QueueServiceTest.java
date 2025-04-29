@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -46,7 +45,7 @@ class QueueServiceTest {
     @DisplayName("콘서트가 존재하지 않으면 예외 발생")
     void testConcertNotFound() {
         QueueCommand command = QueueCommand.of(user, concert);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
 
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.empty());
 
@@ -61,7 +60,7 @@ class QueueServiceTest {
     @DisplayName("모든 좌석이 예약되었으면 예외 발생")
     void testAllSeatReserved() {
         QueueCommand command = QueueCommand.of(user, concert);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
 
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(false);
@@ -80,12 +79,12 @@ class QueueServiceTest {
         QueueCommand command = QueueCommand.of(user, concert);
         Queue queue = Queue.of(user, concert, false);
         long queueId = 42L;
-        long concertId = concertRepo.save(concert);
-        concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
+        concertRepo.saveConcert(concert);
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);
-        Mockito.when(queueRepo.getQueueWaitingNum(queueId, concertId)).thenReturn(5L);
+        Mockito.when(queueRepo.getQueueWaitingCount(queueId, concertId)).thenReturn(5L);
         Mockito.when(queueTokenGenerator.encode(Mockito.any(Queue.class))).thenReturn("dummyToken");
 
         QueueResult result = queueService.getQueueToken(command);
@@ -94,7 +93,7 @@ class QueueServiceTest {
         Assertions.assertNotNull(result.getExpiresIn());
         Assertions.assertEquals("dummyToken", result.getQueueToken());
 
-        Mockito.verify(queueRepo).getQueueWaitingNum(queueId, concertId);
+        Mockito.verify(queueRepo).getQueueWaitingCount(queueId, concertId);
     }
 
     @Test
@@ -102,13 +101,13 @@ class QueueServiceTest {
     void testQueueWaiting() {
         QueueCommand command = QueueCommand.of(user, concert);
         Queue queue = Queue.of(user, concert, false);
-        long concertId = concertRepo.save(concert);
+        long concertId = concertRepo.saveConcert(concert);
         long queueId = 99L;
-        concertRepo.save(concert);
+        concertRepo.saveConcert(concert);
         Mockito.when(concertRepo.getConcertById(concertId)).thenReturn(Optional.of(concert));
         Mockito.when(concertRepo.getConcertIsAvailByConcertId(concertId)).thenReturn(true);
         Mockito.when(queueRepo.save(Mockito.any(Queue.class))).thenReturn(queueId);
-        Mockito.when(queueRepo.getQueueWaitingNum(queueId, concertId)).thenReturn(10L); // 초과
+        Mockito.when(queueRepo.getQueueWaitingCount(queueId, concertId)).thenReturn(10L); // 초과
         Mockito.when(queueTokenGenerator.encode(Mockito.any(Queue.class))).thenReturn("waitingToken");
 
         QueueResult result = queueService.getQueueToken(command);
@@ -117,7 +116,7 @@ class QueueServiceTest {
         Assertions.assertNull(result.getExpiresIn());
         Assertions.assertEquals(10L, result.getWaitingNum());
 
-        Mockito.verify(queueRepo).getQueueWaitingNum(queueId, concertId);
+        Mockito.verify(queueRepo).getQueueWaitingCount(queueId, concertId);
         Mockito.verify(queueTokenGenerator).encode(Mockito.any(Queue.class));
     }
 }

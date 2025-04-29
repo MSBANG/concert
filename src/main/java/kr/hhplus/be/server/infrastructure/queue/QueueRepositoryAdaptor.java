@@ -23,15 +23,17 @@ public class QueueRepositoryAdaptor implements QueueRepository {
         return queueJPARepo.findAllByConcert_concertId(concertId);
     }
 
+    // 같은 콘서트에, 아직 예약을 진행하지 않은 queue Count
     @Override
-    public long getQueueWaitingNum(long queueId, long concertId) {
-        return queueJPARepo.countByConcert_concertIdAndQueueIdLessThan(concertId, queueId);
+    public long getQueueWaitingCount(long queueId, long concertId) {
+        return queueJPARepo.countByConcert_ConcertIdAndIsInProgressAndQueueIdLessThan(concertId, false, queueId);
     }
 
     @Override
-    public Queue getQueueByConcertIdAndUserId(long userId, long concertId) {
-        return queueJPARepo.findByUser_userIdAndConcert_concertId(userId, concertId);
+    public long getQueueInProgressCount(long concertId) {
+        return queueJPARepo.countByConcert_ConcertIdAndIsInProgress(concertId, true);
     }
+
 
     @Override
     public long save(Queue queue) {

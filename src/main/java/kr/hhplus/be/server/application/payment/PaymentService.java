@@ -19,13 +19,14 @@ public class PaymentService {
     // 예약건에 대한 결제 요청
     // 목록에서 예약건을 확인한 다음, 예약건을 특정하여 Command 로 들어온 상태
     @Transactional
+    // payment : 충전, 중복 결제에서 충돌 생길 수 있음
     public void payForReservation(PaymentCommand.Pay command){
         Reservation reservation = reservationRepo.getReservationByUserIdAndReservationId(command.getUserId(), command.getReservationId())
                 .orElseThrow(APIException::reservationNotFound);
         reservation.validateStatusEnum();
         Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
         payment.use(reservation.getSeat().getPrice());
-        paymentRepo.updateBalance(payment.getUserId(), payment.getBalance());
+        reservation.pay();
     }
 
     // 잔금 조회 요청
@@ -35,11 +36,9 @@ public class PaymentService {
     }
 
     @Transactional
-    // 잔금 충전 요청
     public PaymentResult chargeBalance(PaymentCommand.Charge command) {
         Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
         payment.charge(command.getAmount());
-        paymentRepo.updateBalance(payment.getUserId(), payment.getBalance());
         return PaymentResult.from(payment);
     }
 }

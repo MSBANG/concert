@@ -30,16 +30,16 @@ public class Payment extends BaseEntity {
         this.balance = balance;
     }
 
-    public static Payment create(long paymentId, long userId, long balance) {
+    public static Payment create(long userId, long balance) {
         return Payment.builder()
-                .paymentId(paymentId)
                 .userId(userId)
                 .balance(balance)
                 .build();
     }
 
-    public static Payment of(long userId, long balance) {
+    public static Payment of(long paymentId, long userId, long balance) {
         return Payment.builder()
+                .paymentId(paymentId)
                 .userId(userId)
                 .balance(balance)
                 .build();

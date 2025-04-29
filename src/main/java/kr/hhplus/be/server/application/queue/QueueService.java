@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.application.queue;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertRepository;
 import kr.hhplus.be.server.domain.queue.Queue;
 import kr.hhplus.be.server.domain.queue.QueueRepository;
@@ -9,11 +8,6 @@ import kr.hhplus.be.server.infrastructure.queue.QueueTokenGenerator;
 import kr.hhplus.be.server.support.APIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +31,9 @@ public class QueueService {
 
         Queue queue = Queue.of(command.getUser(), command.getConcert(), false);
         long queueId = queueRepo.save(queue);
-        long queueWaitingNum = queueRepo.getQueueWaitingNum(queueId, concertId);
-        if (queueWaitingNum < MAX_QUEUEING_NUM) {
+        long queueWaitingNum = queueRepo.getQueueWaitingCount(queueId, concertId);
+
+        if (queueWaitingNum == 0 && queueRepo.getQueueInProgressCount(concertId) < MAX_QUEUEING_NUM) {
             queue.approachQueue();
         }
         String queueToken = queueTokenGenerator.encode(queue);
@@ -48,11 +43,11 @@ public class QueueService {
     public QueueResult getQueueStatus(String queueToken) {
         Queue queue = queueTokenGenerator.decode(queueToken, Queue.class);
         String newToken = null;
-        long queueWaitingNum = queueRepo.getQueueWaitingNum(
+        long queueWaitingNum = queueRepo.getQueueWaitingCount(
                 queue.getQueueId(),
                 queue.getConcert().getConcertId()
         );
-        if (queueWaitingNum < MAX_QUEUEING_NUM) {
+        if (queueWaitingNum == 0 && queueRepo.getQueueInProgressCount(queue.getConcert().getConcertId()) < MAX_QUEUEING_NUM) {
             queue.approachQueue();
             newToken = queueTokenGenerator.encode(queue);
         }

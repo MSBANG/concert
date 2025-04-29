@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,32 +24,39 @@ public class Reservation extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seatId")
+    @JoinColumn(name = "seatId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ConcertSeat seat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "concertId")
+    @JoinColumn(name = "concertId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Concert concert;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatusEnum statusEnum;
 
+    @Version
+    @Column(name = "OPTLOCK")
+    private long version;
+
+    private LocalDateTime expiresIn;
 
     @Builder
-    private Reservation(long reservationId, long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum) {
+    private Reservation(long reservationId, long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum, LocalDateTime expiresIn) {
         this.reservationId = reservationId;
         this.userId = userId;
         this.seat = seat;
         this.concert = concert;
         this.statusEnum = statusEnum;
+        this.expiresIn = expiresIn;
     }
 
-    public static Reservation create(long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum){
+    public static Reservation create(long userId, ConcertSeat seat, Concert concert, ReservationStatusEnum statusEnum, LocalDateTime expiresIn){
         return Reservation.builder()
                 .userId(userId)
                 .seat(seat)
                 .concert(concert)
                 .statusEnum(statusEnum)
+                .expiresIn(expiresIn)
                 .build();
     }
 
@@ -67,6 +77,13 @@ public class Reservation extends BaseEntity {
                 throw APIException.expiredReservation();
             }
         }
+    }
+    public void expire() {
+        this.statusEnum = ReservationStatusEnum.EXPIRED;
+    }
+
+    public void pay() {
+        this.statusEnum = ReservationStatusEnum.PAID;
     }
 }
 

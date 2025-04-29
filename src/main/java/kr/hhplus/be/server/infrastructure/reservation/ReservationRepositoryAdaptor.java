@@ -4,9 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
+import kr.hhplus.be.server.domain.reservation.ReservationStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +31,24 @@ public class ReservationRepositoryAdaptor implements ReservationRepository {
     }
 
     @Override
-    public void save(Reservation reservation) {
+    public long save(Reservation reservation) {
         em.persist(reservation);
+        em.flush();
+        return reservation.getReservationId();
     }
 
     @Override
     public Optional<Reservation> findBySeatId(long seatId) {
         return reservationJpaRepository.findBySeat_SeatId(seatId);
+    }
+
+    @Override
+    public List<Reservation> getAllExpiredReservations() {
+        return reservationJpaRepository.findByStatusEnumAndExpiresInLessThan(ReservationStatusEnum.RESERVED, LocalDateTime.now());
+    }
+
+    @Override
+    public Reservation getReservationById(long reservationId) {
+        return reservationJpaRepository.findByReservationId(reservationId);
     }
 }
