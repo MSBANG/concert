@@ -44,7 +44,8 @@ public class QueueRepositoryAdaptor implements QueueRepository {
 
     @Override
     public void remove(Queue queue) {
-        em.remove(queue);
+//        em.remove(queue);
+        queueJPARepo.removeByQueueId(queue.getQueueId());
     }
 
     @Override
