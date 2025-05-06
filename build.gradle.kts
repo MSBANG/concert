@@ -37,6 +37,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	compileOnly("org.projectlombok:lombok:1.18.38")
 
 	annotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -52,7 +53,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:mysql")
+	testImplementation("org.testcontainers:mysql") // 이게 테스트 환경에서 MySQL 을 띄워줌
+	testImplementation("com.redis:testcontainers-redis:2.2.4")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
