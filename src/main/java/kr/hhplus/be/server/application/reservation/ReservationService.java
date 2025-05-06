@@ -11,6 +11,7 @@ import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.reservation.ReservationStatusEnum;
 import kr.hhplus.be.server.infrastructure.queue.QueueTokenGenerator;
 import kr.hhplus.be.server.support.APIException;
+import kr.hhplus.be.server.support.distributedLock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class ReservationService {
     private final QueueRepository queueRepository;
     private final QueueTokenGenerator queueTokenGenerator;
 
+    @DistributedLock
     @Transactional
     public void reserveSeat(ReservationCommand command) {
         Queue queue = queueTokenGenerator.decode(command.getQueueToken(), Queue.class);
