@@ -29,7 +29,7 @@ public class QueueService {
             throw APIException.allSeatReserved();
         }
 
-        Queue queue = Queue.of(command.getUser(), command.getConcert(), false);
+        Queue queue = Queue.create(command.getUser(), command.getConcert(), false);
         long queueId = queueRepo.save(queue);
         long queueWaitingNum = queueRepo.getQueueWaitingCount(queueId, concertId);
 

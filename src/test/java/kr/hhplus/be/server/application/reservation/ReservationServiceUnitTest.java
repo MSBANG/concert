@@ -48,7 +48,7 @@ class ReservationServiceTest {
         User user = new User(1L);
         Concert concert = Concert.create("TEST CONCERT");
 
-        Queue queue = Queue.of(user, concert, false);
+        Queue queue = Queue.create(user, concert, false);
 
         ReservationCommand command = ReservationCommand.of(seatId, queueTokenGenerator.encode(queue));
 
@@ -67,7 +67,7 @@ class ReservationServiceTest {
         long concertId = 10L;
         User user = new User(1L);
         Concert concert = Concert.create("TEST CONCERT");
-        Queue queue = Queue.of(user, concert, false);
+        Queue queue = Queue.create(user, concert, false);
 
         ReservationCommand command = ReservationCommand.of(100L, queueTokenGenerator.encode(queue));
 
@@ -90,7 +90,7 @@ class ReservationServiceTest {
 
         User user = new User(1L);
         Concert concert = Concert.create("TEST CONCERT");
-        Queue queue = Queue.of(user, concert, false);
+        Queue queue = Queue.create(user, concert, false);
 
         ReservationCommand command = ReservationCommand.of(userId, queueTokenGenerator.encode(queue));
         ConcertSchedule schedule = Mockito.mock(ConcertSchedule.class);

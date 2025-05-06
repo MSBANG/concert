@@ -77,7 +77,7 @@ class QueueServiceTest {
     @DisplayName("대기 인원이 MAX_QUEUEING_NUM 미만이면 즉시 진입 처리 및 expiresIn 설정")
     void testQueueImmediateEntry() {
         QueueCommand command = QueueCommand.of(user, concert);
-        Queue queue = Queue.of(user, concert, false);
+        Queue queue = Queue.create(user, concert, false);
         long queueId = 42L;
         long concertId = concertRepo.saveConcert(concert);
         concertRepo.saveConcert(concert);
@@ -100,7 +100,7 @@ class QueueServiceTest {
     @DisplayName("대기 인원이 MAX_QUEUEING_NUM 이상이면 대기 상태 유지")
     void testQueueWaiting() {
         QueueCommand command = QueueCommand.of(user, concert);
-        Queue queue = Queue.of(user, concert, false);
+        Queue queue = Queue.create(user, concert, false);
         long concertId = concertRepo.saveConcert(concert);
         long queueId = 99L;
         concertRepo.saveConcert(concert);
