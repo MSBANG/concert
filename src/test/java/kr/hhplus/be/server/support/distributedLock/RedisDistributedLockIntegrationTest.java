@@ -2,9 +2,13 @@ package kr.hhplus.be.server.support.distributedLock;
 
 
 import kr.hhplus.be.server.application.payment.PaymentCommand;
+import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -35,6 +39,7 @@ public class RedisDistributedLockIntegrationTest {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+
     @Test
     void acquire_createsLockKeyInRedis() throws InterruptedException {
         PaymentCommand.Pay pay = PaymentCommand.Pay.of(1L, 100L);
@@ -43,5 +48,34 @@ public class RedisDistributedLockIntegrationTest {
         redisDistributionLock.acquire(pay);
 
         Assertions.assertTrue(redisTemplate.hasKey(expectedKey));
+
+        JoinPoint mockJoinPoint = Mockito.mock(JoinPoint.class);
+        redisDistributionLock.release(mockJoinPoint);
+
+        Assertions.assertFalse(redisTemplate.hasKey(expectedKey));
+    }
+
+    @Test
+    void release_createdLockKeyInRedis() throws InterruptedException {
+        PaymentCommand.Pay pay = PaymentCommand.Pay.of(1L, 100L);
+        String expectedKey = "Lock:paymentUserId:2";
+
+        redisDistributionLock.acquire(pay);
+
+        JoinPoint mockJoinPoint = Mockito.mock(JoinPoint.class);
+        redisDistributionLock.release(mockJoinPoint);
+
+        Assertions.assertFalse(redisTemplate.hasKey(expectedKey));
+    }
+
+    @Test
+    void expire_createdLockKeyInRedis() throws InterruptedException {
+        PaymentCommand.Pay pay = PaymentCommand.Pay.of(1L, 100L);
+        String expectedKey = "Lock:paymentUserId:3";
+
+        redisDistributionLock.acquire(pay);
+        Thread.sleep(5000);
+
+        Assertions.assertFalse(redisTemplate.hasKey(expectedKey));
     }
 }
