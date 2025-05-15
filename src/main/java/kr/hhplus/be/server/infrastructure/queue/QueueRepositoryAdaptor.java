@@ -26,12 +26,12 @@ public class QueueRepositoryAdaptor implements QueueRepository {
     // 같은 콘서트에, 아직 예약을 진행하지 않은 queue Count
     @Override
     public long getQueueWaitingCount(long queueId, long concertId) {
-        return queueJPARepo.countByConcert_ConcertIdAndIsInProgressAndQueueIdLessThan(concertId, false, queueId);
+        return queueJPARepo.countByConcert_ConcertIdAndInProgressAndQueueIdLessThan(concertId, false, queueId);
     }
 
     @Override
     public long getQueueInProgressCount(long concertId) {
-        return queueJPARepo.countByConcert_ConcertIdAndIsInProgress(concertId, true);
+        return queueJPARepo.countByConcert_ConcertIdAndInProgress(concertId, true);
     }
 
 
@@ -44,7 +44,8 @@ public class QueueRepositoryAdaptor implements QueueRepository {
 
     @Override
     public void remove(Queue queue) {
-        em.remove(queue);
+//        em.remove(queue);
+        queueJPARepo.removeByQueueId(queue.getQueueId());
     }
 
     @Override

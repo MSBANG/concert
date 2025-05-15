@@ -103,4 +103,8 @@ public record APIResponse(
 
     public static APIResponse optimisticLockException() {
         return new APIResponse(false, ResponseCodeEnum.OPTIMISTIC_LOCK_EXCEPTION.getStatusCode(), ResponseCodeEnum.OPTIMISTIC_LOCK_EXCEPTION.getMessage(), null);    }
+
+    public static APIResponse distributedLockException() {
+        return new APIResponse(false, ResponseCodeEnum.DISTRIBUTED_LOCK_EXCEPTION.getStatusCode(), ResponseCodeEnum.DISTRIBUTED_LOCK_EXCEPTION.getMessage(), null);    }
+
 }

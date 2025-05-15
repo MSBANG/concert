@@ -14,6 +14,7 @@ public interface QueueJPARepository extends JpaRepository<Queue, Long> {
     List<Queue> findAllByConcert_concertId(long concertId);
 
     long findByConcert_concertId(long concertId);
-    long countByConcert_ConcertIdAndIsInProgressAndQueueIdLessThan(long concertId, boolean isInProgress, long queueId);
-    long countByConcert_ConcertIdAndIsInProgress(long concertId, boolean isInProgress);
+    long countByConcert_ConcertIdAndInProgressAndQueueIdLessThan(long concertId, boolean isInProgress, long queueId);
+    long countByConcert_ConcertIdAndInProgress(long concertId, boolean isInProgress);
+    void removeByQueueId(long queueId);
 }
