@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.concert;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface ScheduleRemainSeatRepository {
@@ -8,6 +7,7 @@ public interface ScheduleRemainSeatRepository {
     Long decrSeat(long scheduleId);
     Long incrSeat(long scheduleId);
     long getSeatRemain(long scheduleId);
-    void setSoldOutSchedule(long scheduleId, Long timeForSoldOut);
-    Set<String> getDailySoldOutScheduleSet();
+    void setSoldOutSchedule(long concertId, String concertName, long scheduleId, Long timeForSoldOut);
+    Set<String> getTodaySoldOutScheduleSet();
+    void removeTodaySoldOutRank();
 }

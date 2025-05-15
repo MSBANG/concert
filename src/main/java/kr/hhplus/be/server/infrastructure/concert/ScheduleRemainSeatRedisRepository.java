@@ -38,24 +38,29 @@ public class ScheduleRemainSeatRedisRepository implements ScheduleRemainSeatRepo
     }
 
     @Override
-    public void setSoldOutSchedule(long scheduleId, Long timeForSoldOut) {
+    public void setSoldOutSchedule(long concertId, String concertName, long scheduleId, Long timeForSoldOut) {
         stringRedisTemplate.opsForZSet().add(
                 "dailySoldOutRank",
-                getSoldOutScheduleKey(scheduleId),
+                getSoldOutScheduleKey(concertId, concertName, scheduleId),
                 (double) timeForSoldOut
         );
     }
 
     @Override
-    public Set<String> getDailySoldOutScheduleSet() {
+    public Set<String> getTodaySoldOutScheduleSet() {
         return stringRedisTemplate.opsForZSet().range("dailySoldOutRank", 0, -1);
+    }
+
+    @Override
+    public void removeTodaySoldOutRank() {
+        stringRedisTemplate.delete("dailySoldOutRank");
     }
 
     private String getRemainSeatKey(long scheduleId) {
         return "scheduleId:%s:remainSeat".formatted(scheduleId);
     }
 
-    private String getSoldOutScheduleKey(long scheduleId) {
-        return "scheduleId:%s:soldOutTime".formatted(scheduleId);
+    private String getSoldOutScheduleKey(long concertId, String concertName, long scheduleId) {
+        return "concertId:%s:concertName:%s:scheduleId:%s:soldOutTime".formatted(concertId, concertName, scheduleId);
     }
 }

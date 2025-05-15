@@ -9,6 +9,7 @@ import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.support.APIException;
 import kr.hhplus.be.server.support.distributedLock.DistributedLock;
+import kr.hhplus.be.server.support.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,23 @@ public class PaymentService {
                 .orElseThrow(APIException::reservationNotFound);
         reservation.validateStatusEnum();
         Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
-        payment.use(reservation.getSeat().getPrice());
+        ConcertSeat seat = reservation.getSeat();
+        payment.use(seat.getPrice());
         reservation.pay();
 
-        // TODO: 결제가 된 이후, Redis 에서 잔여 좌석을 줄인다
-        scheduleRemainSeatRepo.decrSeat(reservation.getSeat().getConcertSchedule().getScheduleId());
+        //결제가 된 이후, Redis 에서 잔여 좌석을 줄인다
+
+        Long seatRemain = scheduleRemainSeatRepo.decrSeat(seat.getConcertSchedule().getScheduleId());
+        
+        //전부 매진된경우 Redis Ranking 에 저장
+        if (seatRemain == 0) {
+            scheduleRemainSeatRepo.setSoldOutSchedule(
+                    seat.getConcert().getConcertId(),
+                    seat.getConcert().getName(),
+                    seat.getConcertSchedule().getScheduleId(),
+                    System.currentTimeMillis() - Utils.DateTimeToMilli(seat.getConcertSchedule().getCreatedAt())
+            );
+        }
     }
 
     // 잔금 조회 요청
