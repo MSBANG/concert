@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class ScheduleRemainSeatRedisRepository implements ScheduleRemainSeatRepository {
@@ -12,13 +14,18 @@ public class ScheduleRemainSeatRedisRepository implements ScheduleRemainSeatRepo
 
 
     @Override
-    public void decrSeat(long scheduleId) {
-        stringRedisTemplate.opsForValue().decrement(this.getRemainSeatKey(scheduleId));
+    public void setRemainSeat(long scheduleId, Long seatRemain) {
+        stringRedisTemplate.opsForValue().setIfAbsent(getRemainSeatKey(scheduleId), seatRemain.toString());
     }
 
     @Override
-    public void incrSeat(long scheduleId) {
-        stringRedisTemplate.opsForValue().increment(this.getRemainSeatKey(scheduleId));
+    public Long decrSeat(long scheduleId) {
+        return stringRedisTemplate.opsForValue().decrement(this.getRemainSeatKey(scheduleId));
+    }
+
+    @Override
+    public Long incrSeat(long scheduleId) {
+        return stringRedisTemplate.opsForValue().increment(this.getRemainSeatKey(scheduleId));
     }
 
     @Override
@@ -30,7 +37,25 @@ public class ScheduleRemainSeatRedisRepository implements ScheduleRemainSeatRepo
         return Long.parseLong(seatRemain);
     }
 
+    @Override
+    public void setSoldOutSchedule(long scheduleId, Long timeForSoldOut) {
+        stringRedisTemplate.opsForZSet().add(
+                "dailySoldOutRank",
+                getSoldOutScheduleKey(scheduleId),
+                (double) timeForSoldOut
+        );
+    }
+
+    @Override
+    public Set<String> getDailySoldOutScheduleSet() {
+        return stringRedisTemplate.opsForZSet().range("dailySoldOutRank", 0, -1);
+    }
+
     private String getRemainSeatKey(long scheduleId) {
-        return "schedule:%s:remainSeat".formatted(scheduleId);
+        return "scheduleId:%s:remainSeat".formatted(scheduleId);
+    }
+
+    private String getSoldOutScheduleKey(long scheduleId) {
+        return "scheduleId:%s:soldOutTime".formatted(scheduleId);
     }
 }
