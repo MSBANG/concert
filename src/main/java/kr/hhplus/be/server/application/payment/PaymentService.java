@@ -2,12 +2,14 @@ package kr.hhplus.be.server.application.payment;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.concert.ScheduleRemainSeatRepository;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.support.APIException;
 import kr.hhplus.be.server.support.distributedLock.DistributedLock;
+import kr.hhplus.be.server.support.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
     private final PaymentRepository paymentRepo;
     private final ReservationRepository reservationRepo;
+    private final ScheduleRemainSeatRepository scheduleRemainSeatRepo;
 
     // 예약건에 대한 결제 요청
     // 목록에서 예약건을 확인한 다음, 예약건을 특정하여 Command 로 들어온 상태
@@ -27,8 +30,23 @@ public class PaymentService {
                 .orElseThrow(APIException::reservationNotFound);
         reservation.validateStatusEnum();
         Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
-        payment.use(reservation.getSeat().getPrice());
+        ConcertSeat seat = reservation.getSeat();
+        payment.use(seat.getPrice());
         reservation.pay();
+
+        //결제가 된 이후, Redis 에서 잔여 좌석을 줄인다
+
+        Long seatRemain = scheduleRemainSeatRepo.decrSeat(seat.getConcertSchedule().getScheduleId());
+        
+        //전부 매진된경우 Redis Ranking 에 저장
+        if (seatRemain == 0) {
+            scheduleRemainSeatRepo.setSoldOutSchedule(
+                    seat.getConcert().getConcertId(),
+                    seat.getConcert().getName(),
+                    seat.getConcertSchedule().getScheduleId(),
+                    System.currentTimeMillis() - Utils.DateTimeToMilli(seat.getConcertSchedule().getCreatedAt())
+            );
+        }
     }
 
     // 잔금 조회 요청

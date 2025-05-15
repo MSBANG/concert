@@ -47,4 +47,5 @@ public class APIException extends RuntimeException {
     public static APIException queueExpiredOrInvalid() { return new APIException(APIResponse.queueExpiredOrInvalid()); }
     public static APIException optimisticLockException() { return new APIException(APIResponse.optimisticLockException()); }
     public static APIException distributedLockException() { return new APIException(APIResponse.distributedLockException()); }
+    public static APIException noSeatRemain() { return new APIException(APIResponse.noSeatRemain()); }
 }

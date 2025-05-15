@@ -107,4 +107,6 @@ public record APIResponse(
     public static APIResponse distributedLockException() {
         return new APIResponse(false, ResponseCodeEnum.DISTRIBUTED_LOCK_EXCEPTION.getStatusCode(), ResponseCodeEnum.DISTRIBUTED_LOCK_EXCEPTION.getMessage(), null);    }
 
+    public static APIResponse noSeatRemain() {
+        return new APIResponse(false, ResponseCodeEnum.NO_SEAT_REMAIN.getStatusCode(), ResponseCodeEnum.NO_SEAT_REMAIN.getMessage(), null);    }
 }

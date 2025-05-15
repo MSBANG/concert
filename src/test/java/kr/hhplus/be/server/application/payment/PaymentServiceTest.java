@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.payment;
 
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.concert.ScheduleRemainSeatRepository;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.reservation.Reservation;
@@ -21,13 +22,14 @@ class PaymentServiceTest {
 
     private PaymentRepository paymentRepo;
     private ReservationRepository reservationRepo;
+    private ScheduleRemainSeatRepository scheduleRemainSeatRepository;
     private PaymentService paymentService;
 
     @BeforeEach
     void setUp() {
         paymentRepo = mock(PaymentRepository.class);
         reservationRepo = mock(ReservationRepository.class);
-        paymentService = new PaymentService(paymentRepo, reservationRepo);
+        paymentService = new PaymentService(paymentRepo, reservationRepo, scheduleRemainSeatRepository);
     }
 
     @Test
