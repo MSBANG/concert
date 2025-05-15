@@ -2,6 +2,7 @@ package kr.hhplus.be.server.application.payment;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.concert.ScheduleRemainSeatRepository;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.reservation.Reservation;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
     private final PaymentRepository paymentRepo;
     private final ReservationRepository reservationRepo;
+    private final ScheduleRemainSeatRepository scheduleRemainSeatRepo;
 
     // 예약건에 대한 결제 요청
     // 목록에서 예약건을 확인한 다음, 예약건을 특정하여 Command 로 들어온 상태
@@ -29,6 +31,9 @@ public class PaymentService {
         Payment payment = paymentRepo.getPaymentByUserId(command.getUserId());
         payment.use(reservation.getSeat().getPrice());
         reservation.pay();
+
+        // TODO: 결제가 된 이후, Redis 에서 잔여 좌석을 줄인다
+        scheduleRemainSeatRepo.decrSeat(reservation.getSeat().getConcertSchedule().getScheduleId());
     }
 
     // 잔금 조회 요청
