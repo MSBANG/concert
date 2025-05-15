@@ -2,9 +2,13 @@ package kr.hhplus.be.server.application.concert;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Getter
+@NoArgsConstructor(force = true)
+@ToString
 public class ConcertCommand {
     private final long concertId;
 

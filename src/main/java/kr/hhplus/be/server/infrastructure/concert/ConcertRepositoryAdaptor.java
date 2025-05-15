@@ -2,10 +2,7 @@ package kr.hhplus.be.server.infrastructure.concert;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import kr.hhplus.be.server.domain.concert.Concert;
-import kr.hhplus.be.server.domain.concert.ConcertRepository;
-import kr.hhplus.be.server.domain.concert.ConcertSchedule;
-import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.concert.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -44,7 +41,7 @@ public class ConcertRepositoryAdaptor implements ConcertRepository {
     }
 
     @Override
-    public List<ConcertSchedule> getAllConcertSchedules(long concertId) {
+    public List<ScheduleDTO> getAllConcertSchedules(long concertId) {
         return concertScheduleJpaRepository.findAllByConcert_ConcertId(concertId);
     }
 

@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.application.concert;
 
-import kr.hhplus.be.server.domain.concert.Concert;
-import kr.hhplus.be.server.domain.concert.ConcertRepository;
-import kr.hhplus.be.server.domain.concert.ConcertSchedule;
-import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.concert.*;
 import kr.hhplus.be.server.support.APIException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -58,10 +55,11 @@ class ConcertServiceUnitTest {
 
         ConcertCommand concertCommand = ConcertCommand.of(concertId);
 
-        ConcertSchedule schedule1 = ConcertSchedule.create(concert, LocalDate.of(2025, 5, 1));
-        ConcertSchedule schedule2 = ConcertSchedule.create(concert, LocalDate.of(2025, 6, 1));
+        ScheduleDTO schedule1 = new ScheduleDTO(1L, LocalDate.of(2025, 5, 1));
+        ScheduleDTO schedule2 = new ScheduleDTO(2L, LocalDate.of(2025, 6, 1));
 
-        List<ConcertSchedule> schedules = List.of(schedule1, schedule2);
+//        List<ConcertSchedule> schedules = List.of(schedule1, schedule2);
+        List<ScheduleDTO> schedules = List.of(schedule1, schedule2);
 
         Mockito.when(concertRepo.getConcertById(concertId))
                 .thenReturn(Optional.of(concert));
@@ -69,7 +67,7 @@ class ConcertServiceUnitTest {
                 .thenReturn(schedules);
 
         // when
-        List<ScheduleResult> result = concertService.getConcertSchedules(concertCommand);
+        List<ScheduleResult> result = concertService.getConcertSchedules(concertCommand).getScheduleList();
 
         // then
         Assertions.assertEquals(2, result.size());

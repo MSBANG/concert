@@ -22,7 +22,7 @@ public class ConcertController implements ConcertControllerDocs{
 
     @Override
     public APIResponse concertList() {
-        List<ConcertResponse> concertResponses = concertService.getAllConcerts().stream()
+        List<ConcertResponse> concertResponses = concertService.getAllConcerts().getConcertResults().stream()
                 .map(ConcertResponse::from)
                 .toList();
         return APIResponse.ok(ResponseItem.of(concertResponses));
@@ -30,7 +30,7 @@ public class ConcertController implements ConcertControllerDocs{
 
     @Override
     public APIResponse concertSchedules(long concertId) {
-        List<ScheduleResponse> scheduleResponses = concertService.getConcertSchedules(ConcertCommand.of(concertId)).stream()
+        List<ScheduleResponse> scheduleResponses = concertService.getConcertSchedules(ConcertCommand.of(concertId)).getScheduleList().stream()
                 .map(ScheduleResponse::from)
                 .toList();
         return APIResponse.ok(ResponseItem.of(scheduleResponses));
